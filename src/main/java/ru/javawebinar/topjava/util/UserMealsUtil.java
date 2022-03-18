@@ -68,4 +68,5 @@ public class UserMealsUtil {
                 .peek(meal -> meal.setExcess(dayCalories.get(meal.getDateTime().toLocalDate()) > caloriesPerDay))
                 .sorted(USER_MEAL_WITH_EXCESS_COMPARATOR).collect(Collectors.toList());
     }
+
 }
