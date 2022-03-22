@@ -8,6 +8,7 @@
 <h3><a href="index.html">Home</a></h3>
     <hr>
 <h2>Meals</h2>
+<br><button <%--style="margin-left: 655px"--%> type="button" OnClick="location.href='meals?action=newMeal'">Add meal</button>
 <section>
     <table style="margin: auto" border="1" cellpadding="8" cellspacing="0">
         <tr>
@@ -23,8 +24,8 @@
                 <td>${meal.dateTime}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="meal?id=${meal.id}&action=edit"><img src="img/pencil.png"></a></td>
-                <td><a href="meal?id=${meal.id}&action=delete"><img src="img/delete.png"></a></td>
+                <td><a href="meals?id=${meal.id}&action=edit"><img src="img/pencil.png"></a></td>
+                <td><a href="meals?id=${meal.id}&action=delete"><img src="img/delete.png"></a></td>
             </tr>
         </c:forEach>
     </table>

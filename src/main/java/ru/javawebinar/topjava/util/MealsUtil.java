@@ -7,12 +7,30 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MealsUtil {
+
+    public static Map<String, Meal> createMealData() {
+        Map<String, Meal> storage= new HashMap<>();
+        Meal m1=new Meal( LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500);
+        storage.put(m1.getId(), m1);
+        Meal m2=new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000);
+        storage.put(m2.getId(), m2);
+        Meal m3= new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500);
+        storage.put(m3.getId(), m3);
+        Meal m4=new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100);
+        storage.put(m4.getId(), m4);
+        Meal m5=new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000);
+        storage.put(m5.getId(), m5);
+        Meal m6=new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500);
+        storage.put(m6.getId(), m6);
+        Meal m7=     new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410);
+        storage.put(m7.getId(), m7);
+        return storage;
+    }
+
     public static void main(String[] args) {
         List<Meal> meals = Arrays.asList(
                 new Meal( LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),

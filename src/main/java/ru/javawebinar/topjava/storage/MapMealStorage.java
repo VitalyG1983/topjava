@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.storage;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MapMealStorage extends AbstractStorage<String> {
-    private final Map<String, Meal> storage = new HashMap<>();
+    private final Map<String, Meal> storage = MealsUtil.createMealData();
 
     protected boolean isExist(String searchKey) {
         return searchKey != null;

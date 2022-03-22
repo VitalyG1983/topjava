@@ -1,0 +1,32 @@
+
+dl {
+    width: 100%;
+    overflow: hidden;
+    background: #FAFAFA;
+    padding: 0;
+    margin: 0
+}
+dt {
+    float: left;
+    width: 10%;
+    /* adjust the width; make sure the total of both is 100% */
+    background: #FAFAFA;
+    padding: 0;
+    margin: 0
+}
+dd {
+    float: left;
+    width: 90%;
+    /* adjust the width; make sure the total of both is 100% */
+    background: #FAFAFA;
+    padding: 0;
+    margin: 0 ;
+}
+
+h2, h3, h4 {
+    margin: 30px 0 8px;
+}
+
+li {
+    margin: 15px 0;
+}

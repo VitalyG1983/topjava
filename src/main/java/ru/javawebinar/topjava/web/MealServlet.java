@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.storage.MapMealStorage;
 import ru.javawebinar.topjava.storage.Storage;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -56,7 +57,7 @@ public class MealServlet extends HttpServlet {
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
         }
-        request.setAttribute("meals", m);
-        request.getRequestDispatcher("/WEB-INF/edit.jsp").forward(request, response);
+        request.setAttribute("meal", m);
+        request.getRequestDispatcher("edit.jsp").forward(request, response);
     }
 }
