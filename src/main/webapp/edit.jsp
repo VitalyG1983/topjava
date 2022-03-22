@@ -11,12 +11,8 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<c:if test="${newMeal == true}">
-    <h2>Добавить еду</h2>
-</c:if>
-<c:if test="${newMeal == false}">
-    <h2>Редактировать еду</h2>
-</c:if>
+<h2><%= newMeal ? "Добавить еду" : "Редактировать еду" %>
+</h2>
 <br/>
 <section>
     <form name="editForm" method="post" action="meals"

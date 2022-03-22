@@ -2,8 +2,11 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.MealTo;
+import ru.javawebinar.topjava.storage.AbstractStorage;
 import ru.javawebinar.topjava.storage.MapMealStorage;
 import ru.javawebinar.topjava.storage.Storage;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -12,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -33,7 +37,9 @@ public class MealServlet extends HttpServlet {
         String id = request.getParameter("id");
         String action = request.getParameter("action");
         if (action == null) {
-            request.setAttribute("meals", storage.getAllSorted());
+            List<MealTo> MealToList = MealsUtil.filteredByStreams(storage.getAllSorted(),
+                    null, null, AbstractStorage.CALORIES_PER_DAY);
+            request.setAttribute("meals", MealToList);
             request.getRequestDispatcher("meals.jsp").forward(request, response);
             return;
         }
@@ -58,7 +64,7 @@ public class MealServlet extends HttpServlet {
         request.getRequestDispatcher("edit.jsp").forward(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));

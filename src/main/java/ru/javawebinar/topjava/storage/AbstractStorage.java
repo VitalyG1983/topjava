@@ -12,6 +12,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public abstract class AbstractStorage<SK> implements Storage {
     static final Comparator<Meal> RESUME_NAME_COMPARATOR = Comparator.comparing(Meal::getDateTime);
+    public static final int CALORIES_PER_DAY = 2000;
     private static final Logger log = getLogger(AbstractStorage.class);
 
     protected abstract SK getSearchKey(String id);
