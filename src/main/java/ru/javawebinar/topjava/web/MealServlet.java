@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
-
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -38,7 +38,8 @@ public class MealServlet extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null) {
             List<MealTo> MealToList = MealsUtil.filteredByStreams(storage.getAllSorted(),
-                    null, null, AbstractStorage.CALORIES_PER_DAY);
+                    LocalTime.of(0, 0, 0, 0),
+                    LocalTime.of(23, 59, 59, 999), AbstractStorage.CALORIES_PER_DAY);
             request.setAttribute("meals", MealToList);
             request.getRequestDispatcher("meals.jsp").forward(request, response);
             return;
@@ -74,7 +75,7 @@ public class MealServlet extends HttpServlet {
         if (!newMeal) {
             storage.delete(Integer.parseInt(id));
         }
-        storage.save(new Meal(id, dateTime, description, Integer.parseInt(calories)));
+        storage.save(new Meal(Integer.parseInt(id), dateTime, description, Integer.parseInt(calories)));
         response.sendRedirect("meals");
     }
 }
