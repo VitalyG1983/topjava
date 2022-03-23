@@ -12,9 +12,8 @@ import java.util.stream.Collectors;
 
 public class MealsUtil {
 
-
-    public static Map<String, Meal> createMealData() {
-        Map<String, Meal> storage = new HashMap<>();
+    public static Map<Integer, Meal> createMealData() {
+        Map<Integer, Meal> storage = new HashMap<>();
         Meal m1 = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500);
         storage.put(m1.getId(), m1);
         Meal m2 = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000);

@@ -46,11 +46,11 @@ public class MealServlet extends HttpServlet {
         Meal m;
         switch (action) {
             case "delete":
-                storage.delete(id);
+                storage.delete(Integer.parseInt(id));
                 response.sendRedirect("meals");
                 return;
             case "edit":
-                m = storage.get(id);
+                m = storage.get(Integer.parseInt(id));
                 request.setAttribute("newMeal", false);
                 break;
             case "newMeal":
@@ -72,7 +72,7 @@ public class MealServlet extends HttpServlet {
         String calories = request.getParameter("calories").trim();
         boolean newMeal = request.getParameter("newMeal").equals("true");
         if (!newMeal) {
-            storage.delete(id);
+            storage.delete(Integer.parseInt(id));
         }
         storage.save(new Meal(id, dateTime, description, Integer.parseInt(calories)));
         response.sendRedirect("meals");

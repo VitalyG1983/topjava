@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.storage;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 
@@ -15,7 +14,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     public static final int CALORIES_PER_DAY = 2000;
     private static final Logger log = getLogger(AbstractStorage.class);
 
-    protected abstract SK getSearchKey(String id);
+    protected abstract SK getSearchKey(Integer id);
 
     protected abstract void doSave(Meal meal, SK searchKey);
 
@@ -38,15 +37,12 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     public void save(Meal m) {
         log.info("Save " + m);
-        if (StringUtils.isBlank(m.getId())) {
-            System.out.println("Enter valid meal id, not " + m.getId());
-        } else {
-            SK searchKey = getNotExistedSearchKey(m.getId());
-            doSave(m, searchKey);
-        }
+        SK searchKey = getNotExistedSearchKey(m.getId());
+        doSave(m, searchKey);
+
     }
 
-    public void delete(String id) {
+    public void delete(Integer id) {
         log.info("Delete" + id);
         SK searchKey = getExistedSearchKey(id);
         doDelete(searchKey);
@@ -61,13 +57,13 @@ public abstract class AbstractStorage<SK> implements Storage {
         System.out.println("Meal with id=" + meal.getId() + " updated in Database");
     }
 
-    public Meal get(String id) {
+    public Meal get(Integer id) {
         log.info("Get" + id);
         SK searchKey = getExistedSearchKey(id);
         return doGet(searchKey);
     }
 
-    private SK getNotExistedSearchKey(String id) {
+    private SK getNotExistedSearchKey(Integer id) {
         SK searchKey = getSearchKey(id);
         if (isExist(searchKey)) {
             log.warn("Meal " + id + " already exist");
@@ -76,7 +72,7 @@ public abstract class AbstractStorage<SK> implements Storage {
         return searchKey;
     }
 
-    private SK getExistedSearchKey(String id) {
+    private SK getExistedSearchKey(Integer id) {
         SK searchKey = getSearchKey(id);
         if (!isExist(searchKey)) {
             log.warn("Meal " + id + " not exist");

@@ -7,36 +7,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MapMealStorage extends AbstractStorage<String> {
-    private final Map<String, Meal> storage = MealsUtil.createMealData();
+public class MapMealStorage extends AbstractStorage<Integer> {
+    private final Map<Integer, Meal> storage = MealsUtil.createMealData();
 
-    protected boolean isExist(String searchKey) {
+    protected boolean isExist(Integer searchKey) {
         return searchKey != null;
     }
 
     @Override
-    protected String getSearchKey(String id) {
+    protected Integer getSearchKey(Integer id) {
         return (storage.containsKey(id)) ? id : null;
     }
 
     @Override
-    protected void doSave(Meal m, String searchKey) {
+    protected void doSave(Meal m, Integer searchKey) {
         storage.put(m.getId(), m);
         System.out.println("Meal with Key= " + m.getId() + " is mapped");
     }
 
     @Override
-    protected void doUpdate(Meal meal, String searchKey) {
+    protected void doUpdate(Meal meal, Integer searchKey) {
         storage.replace(meal.getId(), meal);
     }
 
     @Override
-    protected void doDelete(String key) {
+    protected void doDelete(Integer key) {
         storage.remove(key);
     }
 
     @Override
-    protected Meal doGet(String key) {
+    protected Meal doGet(Integer key) {
         return storage.get(key);
     }
 

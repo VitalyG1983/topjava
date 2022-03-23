@@ -10,9 +10,9 @@ public interface Storage {
 
     void save(Meal r);
 
-    Meal get(String uuid);
+    Meal get(Integer uuid);
 
-    void delete(String uuid);
+    void delete(Integer uuid);
 
     List<Meal> getAllSorted();
 
