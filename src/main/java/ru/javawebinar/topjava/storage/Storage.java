@@ -8,7 +8,7 @@ public interface Storage {
 
     void clear();
 
-    void save(Meal r);
+    void save(Meal m);
 
     Meal get(Integer uuid);
 
@@ -18,5 +18,5 @@ public interface Storage {
 
     int size();
 
-    void update(Meal resume);
+    void update(Meal meal);
 }
