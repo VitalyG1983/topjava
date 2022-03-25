@@ -3,9 +3,8 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.storage.AbstractStorage;
-import ru.javawebinar.topjava.storage.MapMealStorage;
-import ru.javawebinar.topjava.storage.Storage;
+import ru.javawebinar.topjava.storage.MemoryMealStorage;
+import ru.javawebinar.topjava.storage.MealStorage;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletConfig;
@@ -22,12 +21,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
-    private static Storage storage;
+    private static MealStorage mealStorage;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        storage = new MapMealStorage();
+        mealStorage = new MemoryMealStorage();
     }
 
     @Override
@@ -37,9 +36,9 @@ public class MealServlet extends HttpServlet {
         String id = request.getParameter("id");
         String action = request.getParameter("action");
         if (action == null) {
-            List<MealTo> MealToList = MealsUtil.filteredByStreams(storage.getAllSorted(),
+            List<MealTo> MealToList = MealsUtil.filteredByStreams(mealStorage.getAll(),
                     LocalTime.of(0, 0, 0, 0),
-                    LocalTime.of(23, 59, 59, 999999999), AbstractStorage.CALORIES_PER_DAY);
+                    LocalTime.of(23, 59, 59, 999999999), MealsUtil.CALORIES_PER_DAY);
             request.setAttribute("meals", MealToList);
             request.getRequestDispatcher("meals.jsp").forward(request, response);
             return;
@@ -47,15 +46,15 @@ public class MealServlet extends HttpServlet {
         Meal m;
         switch (action) {
             case "delete":
-                storage.delete(Integer.parseInt(id));
+                mealStorage.delete(Integer.parseInt(id));
                 response.sendRedirect("meals");
                 return;
             case "edit":
-                m = storage.get(Integer.parseInt(id));
+                m = mealStorage.get(Integer.parseInt(id));
                 request.setAttribute("newMeal", false);
                 break;
             case "newMeal":
-                m = new Meal();
+                m = new Meal(null);
                 request.setAttribute("newMeal", true);
                 break;
             default:
@@ -72,9 +71,8 @@ public class MealServlet extends HttpServlet {
         String description = request.getParameter("description").trim();
         String calories = request.getParameter("calories").trim();
         boolean newMeal = request.getParameter("newMeal").equals("true");
-        if (newMeal) {
-            storage.save(new Meal(Integer.parseInt(id), dateTime, description, Integer.parseInt(calories)));
-        } else storage.update(new Meal(Integer.parseInt(id), dateTime, description, Integer.parseInt(calories)));
+        mealStorage.save(new Meal(newMeal ? null : Integer.parseInt(id), dateTime, description, Integer.parseInt(calories)));
+
         response.sendRedirect("meals");
     }
 }

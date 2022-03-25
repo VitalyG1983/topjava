@@ -5,6 +5,8 @@
 <html lang="ru">
 <head>
     <title>Meals</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <h3><a href="index.html">Home</a></h3>
@@ -23,20 +25,13 @@
         </tr>
         <c:forEach var="meal" items="${meals}">
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
-            <c:choose>
-                <c:when test="${meal.excess == true}">
-                    <tr style="color: red">
-                </c:when>
-                <c:otherwise>
-                    <tr style="color: green">
-                </c:otherwise>
-            </c:choose>
-            <td><%=TimeUtil.DATE_TIME_FORMATTER.format(meal.getDateTime())%>
-            </td>
-            <td>${meal.description}</td>
-            <td>${meal.calories}</td>
-            <td><a href="meals?id=${meal.id}&action=edit"><img src="img/pencil.png"></a></td>
-            <td><a href="meals?id=${meal.id}&action=delete"><img src="img/delete.png"></a></td>
+          <%--  <tr class="${meal.excess ? 'meals:excess' : 'meals:normal'}">--%>
+            <tr>
+                <td>${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()} </td>
+                <td>${meal.description}</td
+            <%--    <td>${meal.calories}</td>--%>
+                <td><a href="meals?id=${meal.id}&action=edit"><img src="img/pencil.png"></a></td>
+                <td><a href="meals?id=${meal.id}&action=delete"><img src="img/delete.png"></a></td>
             </tr>
         </c:forEach>
     </table>

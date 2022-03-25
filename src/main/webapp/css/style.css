@@ -6,6 +6,7 @@ dl {
     padding: 0;
     margin: 0
 }
+
 dt {
     float: left;
     width: 10%;
@@ -14,13 +15,14 @@ dt {
     padding: 0;
     margin: 0
 }
+
 dd {
     float: left;
     width: 90%;
     /* adjust the width; make sure the total of both is 100% */
     background: #FAFAFA;
     padding: 0;
-    margin: 0 ;
+    margin: 0;
 }
 
 h2, h3, h4 {
@@ -30,3 +32,13 @@ h2, h3, h4 {
 li {
     margin: 15px 0;
 }
+
+
+.meals\:normal {
+    color: green;
+}
+
+.meals\:excess {
+    color: red;
+}
+
