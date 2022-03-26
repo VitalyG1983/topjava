@@ -1,5 +1,3 @@
-<%@ page import="ru.javawebinar.topjava.util.TimeUtil" %>
-<%@ page import="ru.javawebinar.topjava.model.MealTo" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html lang="ru">
@@ -25,11 +23,10 @@
         </tr>
         <c:forEach var="meal" items="${meals}">
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
-          <%--  <tr class="${meal.excess ? 'meals:excess' : 'meals:normal'}">--%>
-            <tr>
+            <tr class="${meal.excess ? 'meals:red' : 'meals:green'}">
                 <td>${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()} </td>
-                <td>${meal.description}</td
-            <%--    <td>${meal.calories}</td>--%>
+                <td>${meal.description}</td>
+                <td>${meal.calories}</td>
                 <td><a href="meals?id=${meal.id}&action=edit"><img src="img/pencil.png"></a></td>
                 <td><a href="meals?id=${meal.id}&action=delete"><img src="img/delete.png"></a></td>
             </tr>

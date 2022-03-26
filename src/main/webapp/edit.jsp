@@ -24,8 +24,7 @@
             <dt>Дата/Время</dt>
             <dd><input type="datetime-local" name="dateTime" size=30 value="${meal.dateTime}" required></dd>
             <dt>Описание</dt>
-            <dd><input type="text" name="description" size=30 value="${meal.description}"
-                       required pattern="[\s]{0,}[А-Яа-яa-zA-Z0-9]{1,}[А-Яа-яa-zA-Z0-9\s]{0,}"
+            <dd><input type="text" name="description" size=30 value="${meal.description}" required
                        title="'Описание' не должно быть пустым и содержать специальных символов"></dd>
             <dt>Калории</dt>
             <dd><input type="number" name="calories" size=30 value="${meal.calories}" required></dd>

@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.storage;
 
-import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -10,11 +9,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
+import static ru.javawebinar.topjava.web.MealServlet.log;
 
 public class MemoryMealStorage implements MealStorage {
-    private static final Logger log = getLogger(MemoryMealStorage.class);
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
     private static final AtomicInteger idCounter = new AtomicInteger(0);
 
@@ -61,7 +58,6 @@ public class MemoryMealStorage implements MealStorage {
         } else {
             log.info("Meal with id={} have no mapping value", id);
         }
-
         return meal;
     }
 }

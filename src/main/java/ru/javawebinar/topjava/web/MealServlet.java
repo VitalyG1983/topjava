@@ -16,11 +16,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
-    private static final Logger log = getLogger(MealServlet.class);
+    public static final Logger log = getLogger(MealServlet.class);
     private static MealStorage mealStorage;
 
     @Override
@@ -32,21 +33,16 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to meals");
-
-        String id = request.getParameter("id");
+        String id = null;
         String action = request.getParameter("action");
-        if (action == null) {
-            List<MealTo> MealToList = MealsUtil.filteredByStreams(mealStorage.getAll(),
-                    LocalTime.of(0, 0, 0, 0),
-                    LocalTime.of(23, 59, 59, 999999999), MealsUtil.CALORIES_PER_DAY);
-            request.setAttribute("meals", MealToList);
-            request.getRequestDispatcher("meals.jsp").forward(request, response);
-            return;
+        if (action != null && !action.equals("newMeal")) {
+            id = Objects.requireNonNull(request.getParameter("id"));
         }
         Meal m;
-        switch (action) {
+        switch (action == null ? "mealList" : action) {
             case "delete":
                 mealStorage.delete(Integer.parseInt(id));
+                log.info("Redirect after \"delete\" id ={}to meals.jsp from MealServlet.doGet()", id);
                 response.sendRedirect("meals");
                 return;
             case "edit":
@@ -57,22 +53,29 @@ public class MealServlet extends HttpServlet {
                 m = new Meal(null);
                 request.setAttribute("newMeal", true);
                 break;
+            case "mealList":
             default:
-                throw new IllegalArgumentException("Action " + action + " is illegal");
+                List<MealTo> MealToList = MealsUtil.filteredByStreams(mealStorage.getAll(),
+                        LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DAY);
+                request.setAttribute("meals", MealToList);
+                log.info("Forward with unknown 'action' to meals.jsp from MealServlet.doGet()");
+                request.getRequestDispatcher("meals.jsp").forward(request, response);
+                return;
         }
         request.setAttribute("meal", m);
+        log.info("Forward to edit.jsp with IdMeal={}", id);
         request.getRequestDispatcher("edit.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
-        String id = request.getParameter("id");
+        String id = Objects.requireNonNull(request.getParameter("id"));
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         String description = request.getParameter("description").trim();
-        String calories = request.getParameter("calories").trim();
+        int calories = Integer.parseInt(request.getParameter("calories").trim());
         boolean newMeal = request.getParameter("newMeal").equals("true");
-        mealStorage.save(new Meal(newMeal ? null : Integer.parseInt(id), dateTime, description, Integer.parseInt(calories)));
-
+        mealStorage.save(new Meal(newMeal ? null : Integer.parseInt(id), dateTime, description, calories));
+        log.info("Redirect to meals.jsp from MealServlet.doPost() after \"save\" meal");
         response.sendRedirect("meals");
     }
 }

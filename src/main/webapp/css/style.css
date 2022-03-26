@@ -34,11 +34,11 @@ li {
 }
 
 
-.meals\:normal {
+.meals\:green {
     color: green;
 }
 
-.meals\:excess {
+.meals\:red {
     color: red;
 }
 
