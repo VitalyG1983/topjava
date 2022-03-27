@@ -10,7 +10,7 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Meals</h2>
-<button type="button" OnClick="location.href='meals?action=newMeal'">Add meal</button>
+<button type="button" OnClick="location.href='meals?action=newmeal'">Add meal</button>
 <section>
     <br>
     <table border="1" cellpadding="8" cellspacing="0">

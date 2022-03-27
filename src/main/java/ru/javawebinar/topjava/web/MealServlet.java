@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
     public static final Logger log = getLogger(MealServlet.class);
-    private static MealStorage mealStorage;
+    private MealStorage mealStorage;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -32,39 +33,38 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.debug("redirect to meals");
-        String id = null;
+        log.debug("Redirected to meals");
         String action = request.getParameter("action");
-        if (action != null && !action.equals("newMeal")) {
-            id = Objects.requireNonNull(request.getParameter("id"));
-        }
-        Meal m;
-        switch (action == null ? "mealList" : action) {
-            case "delete":
+        switch (action == null ? "meallist" : action) {
+            case "delete": {
+                String id = Objects.requireNonNull(request.getParameter("id"));
                 mealStorage.delete(Integer.parseInt(id));
                 log.info("Redirect after \"delete\" id ={}to meals.jsp from MealServlet.doGet()", id);
                 response.sendRedirect("meals");
                 return;
+            }
+            case "newmeal":
             case "edit":
-                m = mealStorage.get(Integer.parseInt(id));
-                request.setAttribute("newMeal", false);
+                Meal m;
+                String id = null;
+                if (action.equals("edit")) {
+                    id = Objects.requireNonNull(request.getParameter("id"));
+                    m = mealStorage.get(Integer.parseInt(id));
+                } else {
+                    m = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "newMeal", 0);
+                }
+                request.setAttribute("meal", m);
+                log.info("Forward to editMeal.jsp with id={}", action.equals("edit") ? id : null);
+                request.getRequestDispatcher("editMeal.jsp").forward(request, response);
                 break;
-            case "newMeal":
-                m = new Meal(null);
-                request.setAttribute("newMeal", true);
-                break;
-            case "mealList":
+            case "meallist":
             default:
-                List<MealTo> MealToList = MealsUtil.filteredByStreams(mealStorage.getAll(),
+                List<MealTo> mealToList = MealsUtil.filteredByStreams(mealStorage.getAll(),
                         LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DAY);
-                request.setAttribute("meals", MealToList);
+                request.setAttribute("meals", mealToList);
                 log.info("Forward with unknown 'action' to meals.jsp from MealServlet.doGet()");
                 request.getRequestDispatcher("meals.jsp").forward(request, response);
-                return;
         }
-        request.setAttribute("meal", m);
-        log.info("Forward to edit.jsp with IdMeal={}", id);
-        request.getRequestDispatcher("edit.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -73,8 +73,11 @@ public class MealServlet extends HttpServlet {
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         String description = request.getParameter("description").trim();
         int calories = Integer.parseInt(request.getParameter("calories").trim());
-        boolean newMeal = request.getParameter("newMeal").equals("true");
-        mealStorage.save(new Meal(newMeal ? null : Integer.parseInt(id), dateTime, description, calories));
+        if (id.isEmpty()) {
+            mealStorage.save(new Meal(dateTime, description, calories));
+        } else {
+            mealStorage.save(new Meal(Integer.parseInt(id), dateTime, description, calories));
+        }
         log.info("Redirect to meals.jsp from MealServlet.doPost() after \"save\" meal");
         response.sendRedirect("meals");
     }

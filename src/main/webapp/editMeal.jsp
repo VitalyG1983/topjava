@@ -6,19 +6,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <jsp:useBean id="newMeal" type="java.lang.Boolean" scope="request"/>
 </head>
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h2>${ newMeal ? "Добавить еду" : "Редактировать еду"}
+<h2>${meal.id==null ? "Добавить еду" : "Редактировать еду"}
 </h2>
 <br/>
 <section>
     <form name="editForm" method="post" action="meals"
           enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="id" value="${meal.id}">
-        <input type="hidden" name="newMeal" value="${newMeal}">
         </h3>
         <dl>
             <dt>Дата/Время</dt>
