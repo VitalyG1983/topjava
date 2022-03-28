@@ -15,7 +15,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MemoryMealStorage implements MealStorage {
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
     private final AtomicInteger idCounter = new AtomicInteger();
-    public static final Logger log = getLogger(MemoryMealStorage.class);
+    private static final Logger log = getLogger(MemoryMealStorage.class);
 
     {
         MealsUtil.meals.forEach(this::save);
