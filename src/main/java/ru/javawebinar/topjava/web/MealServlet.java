@@ -54,7 +54,7 @@ public class MealServlet extends HttpServlet {
                     m = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "newMeal", 0);
                 }
                 request.setAttribute("meal", m);
-                log.info("Forward to editMeal.jsp with id={}", action.equals("edit") ? id : null);
+                log.info("Forward to editMeal.jsp with id={}", id);
                 request.getRequestDispatcher("editMeal.jsp").forward(request, response);
                 break;
             case "meallist":
@@ -62,7 +62,7 @@ public class MealServlet extends HttpServlet {
                 List<MealTo> mealToList = MealsUtil.filteredByStreams(mealStorage.getAll(),
                         LocalTime.MIN, LocalTime.MAX, MealsUtil.CALORIES_PER_DAY);
                 request.setAttribute("meals", mealToList);
-                log.info("Forward with unknown 'action' to meals.jsp from MealServlet.doGet()");
+                log.info("Forward to meals.jsp from MealServlet.doGet()");
                 request.getRequestDispatcher("meals.jsp").forward(request, response);
         }
     }

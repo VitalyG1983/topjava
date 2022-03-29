@@ -13,9 +13,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MemoryMealStorage implements MealStorage {
+    private static final Logger log = getLogger(MemoryMealStorage.class);
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
     private final AtomicInteger idCounter = new AtomicInteger();
-    private static final Logger log = getLogger(MemoryMealStorage.class);
 
     {
         MealsUtil.meals.forEach(this::save);
@@ -35,12 +35,8 @@ public class MemoryMealStorage implements MealStorage {
             log.info("Meal with newId={} saved", newId);
             return m;
         } else {
-            if (storage.get(oldId) != null) {
-                storage.put(oldId, m);
-                log.info("Meal with Id={}  updated", oldId);
-                return m;
-            }
-            return null;
+            log.info("Meal with Id={}  updated", oldId);
+            return storage.computeIfPresent(oldId, (key, oldValue) -> m);
         }
     }
 
