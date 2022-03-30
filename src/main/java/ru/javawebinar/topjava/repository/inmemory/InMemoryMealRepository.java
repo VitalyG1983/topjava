@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryMealRepository implements MealRepository {
     private final Map<Integer, Meal> repository = new ConcurrentHashMap<>();
-    private final AtomicInteger counter = new AtomicInteger(0);
+    private final AtomicInteger counter = new AtomicInteger();
 
     {
         MealsUtil.meals.forEach(this::save);
@@ -43,4 +43,3 @@ public class InMemoryMealRepository implements MealRepository {
         return repository.values();
     }
 }
-
