@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public class MealsUtil {
     );
 
     public static List<MealTo> getTos(Collection<Meal> meals, int caloriesPerDay) {
-        return filterByPredicate(meals, caloriesPerDay, meal -> true);
+        return filterByPredicate(meals, caloriesPerDay, meal -> meal.getUserId().equals(SecurityUtil.authUserId()));
     }
 
     public static List<MealTo> getFilteredTos(Collection<Meal> meals, int caloriesPerDay, LocalTime startTime, LocalTime endTime) {
