@@ -6,9 +6,26 @@
 <body>
 <h3>Проект <a href="https://github.com/JavaWebinar/topjava" target="_blank">Java Enterprise (Topjava)</a></h3>
 <hr>
-<ul style="font-size: large">
-    <li><a href="users">Users</a></li>
-    <li><a href="meals">Meals</a></li>
-</ul>
+
+<form name="index" method="post" action="meals?action=viewmeals">
+    <ul style="font-size: large">
+        <li><a href="users">Users</a></li>
+        <!-- <li><a href="meals">Meals</a></li>-->
+        <li><input style="border: none;
+                          background-color: unset;
+                          text-decoration-line: underline;
+                          font-size: 16px;
+                          color: rgb(85, 26, 139);
+                          margin-left: -5px;
+                          cursor: pointer"
+                   type="submit" value="Meals"></li>
+    </ul>
+    <label for="selectUser" style="display: inline-block"><h4>Choose user:</h4></label>
+    <select name="selectedUser" id="selectUser">
+        <!-- <option value="">- - - -</option>-->
+        <option value="1">user</option>
+        <option value="2">admin</option>
+    </select>
+</form>
 </body>
 </html>

@@ -35,8 +35,12 @@ public class MealService {
         return (List<Meal>) repository.getAll();
     }
 
-    public List<Meal> getAllForUser(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return (List<Meal>) repository.getAllForUser(userId, startDate, endDate, startTime, endTime);
+    public List<Meal> getAllForUserFiltered(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        return (List<Meal>) repository.getAllForUserFiltered(userId, startDate, endDate, startTime, endTime);
+    }
+
+    public List<Meal> getAllForUser(int userId) {
+        return (List<Meal>) repository.getAllForUser(userId);
     }
 
     public void update(Meal meal, int userId) {

@@ -58,12 +58,21 @@ public class InMemoryMealRepository implements MealRepository {
         return list;
     }
 
+    public Collection<Meal> getAllForUser(int userId) {
+        return new ArrayList<>(repository.values()).stream().filter(m -> fitUserId(m.getUserId(), userId))
+                .sorted(MEAL_DATE_TIME_COMPARATOR).collect(Collectors.toList());
+    }
+
     @Override
-    public Collection<Meal> getAllForUser(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return new ArrayList<>(repository.values()).stream()
-                .filter(m -> fitUserId(m.getUserId(), userId)
+    public Collection<Meal> getAllForUserFiltered(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        List<Meal> list = new ArrayList<>(repository.values()).stream().filter(m -> fitUserId(m.getUserId(), userId)
                         && DateTimeUtil.isBetweenHalfOpen(m.getDate(), startDate, endDate)
                         && DateTimeUtil.isBetweenHalfOpen(m.getTime(), startTime, endTime))
                 .sorted(MEAL_DATE_TIME_COMPARATOR).collect(Collectors.toList());
+        return list;
+    }
+
+     boolean fitUserId(Integer mealUserId, int actualUserId) {
+        return mealUserId.equals(actualUserId);
     }
 }

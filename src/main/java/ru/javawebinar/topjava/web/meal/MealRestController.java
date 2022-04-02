@@ -2,14 +2,14 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -26,14 +26,20 @@ public class MealRestController {
         this.service = service;
     }
 
-    public List<Meal> getAllForUser(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        log.info("getAll() meals from logined user");
-        return service.getAllForUser(SecurityUtil.authUserId(), startDate, endDate, startTime, endTime);
+    public List<MealTo> getAllForUserFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        log.info("getAll() meals from user");
+        return MealsUtil.getTos(service.getAllForUserFiltered(SecurityUtil.authUserId(), startDate, endDate, startTime, endTime),
+                SecurityUtil.authUserCaloriesPerDay());
     }
 
-    public List<Meal> getAll() {
+    public List<MealTo> getAllForUser() {
+        log.info("getAll() meals from user");
+        return MealsUtil.getTos(service.getAllForUser(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay());
+    }
+
+    public List<MealTo> getAll() {
         log.info("getAll() meals from all users");
-        return service.getAll();
+        return MealsUtil.getTos(service.getAll(), SecurityUtil.authUserCaloriesPerDay());
     }
 
     public Meal get(int id) {
