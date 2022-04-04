@@ -62,8 +62,8 @@ public class MealServlet extends HttpServlet {
             }
             case "createupdate":
                 String id = request.getParameter("id");
-                String userId = request.getParameter("userId");
-                Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id), userId.isEmpty() ? null : Integer.valueOf(userId),
+               // String userId = request.getParameter("userId");
+                Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                         LocalDateTime.parse(request.getParameter("dateTime")), request.getParameter("description"),
                         Integer.parseInt(request.getParameter("calories")));
                 log.info(meal.isNew() ? "Create {}" : "Update {}", meal);

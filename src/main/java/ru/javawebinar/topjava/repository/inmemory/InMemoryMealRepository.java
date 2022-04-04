@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -21,58 +22,58 @@ public class InMemoryMealRepository implements MealRepository {
 
     {
         for (Meal meal : MealsUtil.meals) {
-            save(meal, meal.getDate().getDayOfMonth() == 30 ? 1 : 2);
+            //save(meal, meal.getDate().getDayOfMonth() == 30 ? 1 : 2);
+            save(meal, meal.getUserId());
         }
     }
 
     @Override
     public Meal save(Meal meal, int userId) {
+        meal.setUserId(userId);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            meal.setUserId(userId);
             repository.put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage
-        return (fitUserId(meal.getUserId(), userId)) ? repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal) : null;
+        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> oldMeal.getUserId() == userId ? meal : oldMeal);
     }
 
     @Override
     public boolean delete(int id, int userId) {
+         AtomicBoolean deleted = new AtomicBoolean();
         Meal m = repository.computeIfPresent(id, (key, oldValue) -> {
-            if (fitUserId(oldValue.getUserId(), userId)) return null;
-            return oldValue;
+            deleted.set(oldValue.getUserId() == userId);
+            return deleted.get() ? null : oldValue;
         });
-        return m == null;
+        return deleted.get();
     }
 
     @Override
     public Meal get(int id, int userId) {
         Meal m = repository.get(id);
-        return (m != null && fitUserId(m.getUserId(), userId)) ? m : null;
+        return (m != null && m.getUserId() == userId) ? m : null;
     }
 
+    @Override
     public List<Meal> getAll() {
         List<Meal> list = new ArrayList<>(repository.values());
         list.sort(MEAL_DATE_TIME_COMPARATOR);
         return list;
     }
 
+    @Override
     public Collection<Meal> getAllForUser(int userId) {
-        return new ArrayList<>(repository.values()).stream().filter(m -> fitUserId(m.getUserId(), userId))
+        return new ArrayList<>(repository.values()).stream().filter(m -> m.getUserId() == userId)
                 .sorted(MEAL_DATE_TIME_COMPARATOR).collect(Collectors.toList());
     }
 
     @Override
     public Collection<Meal> getAllForUserFiltered(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        List<Meal> list = new ArrayList<>(repository.values()).stream().filter(m -> fitUserId(m.getUserId(), userId)
+        List<Meal> list = new ArrayList<>(repository.values()).stream().filter(m -> m.getUserId() == userId
                         && DateTimeUtil.isBetweenHalfOpen(m.getDate(), startDate, endDate)
                         && DateTimeUtil.isBetweenHalfOpen(m.getTime(), startTime, endTime))
                 .sorted(MEAL_DATE_TIME_COMPARATOR).collect(Collectors.toList());
         return list;
-    }
-
-     boolean fitUserId(Integer mealUserId, int actualUserId) {
-        return mealUserId.equals(actualUserId);
     }
 }
