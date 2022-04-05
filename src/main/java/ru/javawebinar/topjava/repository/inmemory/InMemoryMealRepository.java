@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -12,6 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
@@ -41,7 +43,7 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int id, int userId) {
-         AtomicBoolean deleted = new AtomicBoolean();
+        AtomicBoolean deleted = new AtomicBoolean();
         Meal m = repository.computeIfPresent(id, (key, oldValue) -> {
             deleted.set(oldValue.getUserId() == userId);
             return deleted.get() ? null : oldValue;
@@ -70,10 +72,31 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Collection<Meal> getAllForUserFiltered(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        // List<Meal> forUser= (List<Meal>) getAllForUser(userId);
+       /* List<MealTo> forUserMealTo = filterByPredicate(forUser, 2000, meal -> meal.getUserId() == userId,
+                startDate, endDate, startTime, endTime);*/
+
+
         List<Meal> list = new ArrayList<>(repository.values()).stream().filter(m -> m.getUserId() == userId
                         && DateTimeUtil.isBetweenHalfOpen(m.getDate(), startDate, endDate)
                         && DateTimeUtil.isBetweenHalfOpen(m.getTime(), startTime, endTime))
                 .sorted(MEAL_DATE_TIME_COMPARATOR).collect(Collectors.toList());
         return list;
     }
+
+/*    public static List<Meal> filterByPredicate(Collection<Meal> meals, Predicate<Meal> filterByUser,
+                                                 LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
+                .collect(
+                        Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories))
+//                      Collectors.toMap(Meal::getDate, Meal::getCalories, Integer::sum)
+                );
+
+        return meals.stream()
+                .filter(filter)
+                .map(meal -> createTo(meal, caloriesSumByDate.get(meal.getDate()) > caloriesPerDay))
+                .filter(m -> DateTimeUtil.isBetweenHalfOpen(m.getDate(), startDate, endDate)
+                        && DateTimeUtil.isBetweenHalfOpen(m.getTime(), startTime, endTime)))
+                .collect(Collectors.toList());
+    }*/
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
@@ -28,8 +29,9 @@ public class MealRestController {
 
     public List<MealTo> getAllForUserFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("getAll() meals from user");
-        return MealsUtil.getTos(service.getAllForUserFiltered(SecurityUtil.authUserId(), startDate, endDate, startTime, endTime),
-                SecurityUtil.authUserCaloriesPerDay());
+        return MealsUtil.getToForUser(service.getAllForUser(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay(),
+                m -> DateTimeUtil.isBetweenHalfOpen(m.getDate(), startDate, endDate)
+                        && DateTimeUtil.isBetweenHalfOpen(m.getTime(), startTime, endTime));
     }
 
     public List<MealTo> getAllForUser() {
