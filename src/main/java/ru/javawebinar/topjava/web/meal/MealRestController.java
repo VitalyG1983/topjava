@@ -19,7 +19,7 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
 public class MealRestController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final MealService service;
 
@@ -30,8 +30,8 @@ public class MealRestController {
     public List<MealTo> getAllForUserFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("getAll() meals from user");
         return MealsUtil.getToForUser(service.getAllForUser(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay(),
-                m -> DateTimeUtil.isBetweenHalfOpen(m.getDate(), startDate, endDate)
-                        && DateTimeUtil.isBetweenHalfOpen(m.getTime(), startTime, endTime));
+                m -> DateTimeUtil.isBetweenDate(m.getDate(), startDate, endDate)
+                        && DateTimeUtil.isBetweenTime(m.getTime(), startTime, endTime));
     }
 
     public List<MealTo> getAllForUser() {

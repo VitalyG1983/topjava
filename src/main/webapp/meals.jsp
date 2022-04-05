@@ -21,8 +21,9 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
-    <form name="filterForm" method="post" >
+    <form name="filterForm" method="get" >
         <table cellpadding="8" cellspacing="0">
+            <input type="hidden" name="action" value="filter">
             <tr>
                 <th>
                     <label for="startDate">От даты (включая)</label> <br>
