@@ -39,11 +39,6 @@ public class MealRestController {
         return MealsUtil.getTos(service.getAllForUser(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay());
     }
 
-    public List<MealTo> getAll() {
-        log.info("getAll() meals from all users");
-        return MealsUtil.getTos(service.getAll(), SecurityUtil.authUserCaloriesPerDay());
-    }
-
     public Meal get(int id) {
         log.info("get {}", id);
         return service.get(id, SecurityUtil.authUserId());

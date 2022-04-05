@@ -1,18 +1,18 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
@@ -54,13 +54,7 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public User getByEmail(String email) {
-        if (email == null) return null;
-        List<User> users = repository.values().stream().filter(user -> user.getEmail().equals(email))
-                .collect(Collectors.toList());
-        if (users.isEmpty()) return null;
-        else {
-            log.info("User gotten by Email={}", email);
-            return users.get(0);
-        }
+        return email != null ? repository.values().stream().filter(user ->
+                StringUtils.equalsIgnoreCase(user.getEmail(), (email))).findFirst().orElse(null) : null;
     }
 }

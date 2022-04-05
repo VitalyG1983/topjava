@@ -31,16 +31,16 @@ public class MealService {
         return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
-    public List<Meal> getAll() {
+  /*  public List<Meal> getAll() {
         return (List<Meal>) repository.getAll();
-    }
+    }*/
 
-    public List<Meal> getAllForUserFiltered(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+   /* public List<Meal> getAllForUserFiltered(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         return (List<Meal>) repository.getAllForUserFiltered(userId, startDate, endDate, startTime, endTime);
-    }
+    }*/
 
     public List<Meal> getAllForUser(int userId) {
-        return (List<Meal>) repository.getAllForUser(userId);
+        return repository.getAllForUser(userId);
     }
 
     public void update(Meal meal, int userId) {
