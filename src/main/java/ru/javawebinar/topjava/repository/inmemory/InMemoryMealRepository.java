@@ -7,9 +7,7 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,7 +16,7 @@ import java.util.stream.Collectors;
 @Repository
 public class InMemoryMealRepository implements MealRepository {
     private static final Comparator<Meal> MEAL_DATE_TIME_COMPARATOR = Comparator.comparing(Meal::getDateTime).reversed();
-    private final Map<Integer, Meal> repository = new ConcurrentHashMap<>();
+    private final Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger();
 
     {
@@ -29,15 +27,16 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
+        Map<Integer, Meal> mealMap = repository.computeIfAbsent(userId, k -> new HashMap<>());
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             meal.setUserId(userId);
-            repository.put(meal.getId(), meal);
+            mealMap.put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage
         AtomicBoolean updated = new AtomicBoolean();
-        repository.computeIfPresent(meal.getId(), (id, oldMeal) -> {
+        mealMap.computeIfPresent(meal.getId(), (id, oldMeal) -> {
             if (oldMeal.getUserId() == userId) {
                 updated.set(true);
                 meal.setUserId(userId);
@@ -49,8 +48,12 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int id, int userId) {
+        Map<Integer, Meal> mealMap = repository.get(userId);
+        if (mealMap == null || mealMap.isEmpty()) {
+            return false;
+        }
         AtomicBoolean deleted = new AtomicBoolean();
-        repository.computeIfPresent(id, (key, oldValue) -> {
+        mealMap.computeIfPresent(id, (key, oldValue) -> {
             deleted.set(oldValue.getUserId() == userId);
             return deleted.get() ? null : oldValue;
         });
@@ -59,22 +62,25 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        Meal m = repository.get(id);
+        Map<Integer, Meal> mealMap = repository.get(userId);
+        if (mealMap == null || mealMap.isEmpty()) {
+            return null;
+        }
+        Meal m = mealMap.get(id);
         return m != null && (m.getUserId() == userId) ? m : null;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return repository.values().stream()
-                .filter(m -> m.getUserId() == userId)
-                .sorted(MEAL_DATE_TIME_COMPARATOR)
-                .collect(Collectors.toList());
+        Map<Integer, Meal> mealMap = repository.computeIfAbsent(userId, k -> new HashMap<>());
+        List<Meal> mealList = new ArrayList<>(mealMap.values());
+        mealList.sort(MEAL_DATE_TIME_COMPARATOR);
+        return mealList;
     }
 
     public List<Meal> getAllFiltered(int userId, LocalDate start, LocalDate end) {
-        return repository.values().stream()
-                .filter(m -> m.getUserId() == userId && DateTimeUtil.isBetweenDate(m.getDate(), start, end))
-                .sorted(MEAL_DATE_TIME_COMPARATOR)
+        return getAll(userId).stream()
+                .filter(m -> DateTimeUtil.isBetweenDate(m.getDate(), start, end))
                 .collect(Collectors.toList());
     }
 }

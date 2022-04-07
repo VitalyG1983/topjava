@@ -28,7 +28,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void init() {
-        appCtx  = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         log.info("Bean definition names: {}", Arrays.toString(appCtx.getBeanDefinitionNames()));
         MealRestController = appCtx.getBean(MealRestController.class);
     }
@@ -44,12 +44,6 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         switch (action != null ? action : "all") {
-            case "viewmeals": {
-                String selectedUser = request.getParameter("selectedUser");
-                int userId = selectedUser.isEmpty() ? 0 : Integer.parseInt(selectedUser);
-                SecurityUtil.setAuthId(userId);
-                break;
-            }
             case "createupdate":
                 String id = request.getParameter("id");
                 Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
@@ -90,13 +84,13 @@ public class MealServlet extends HttpServlet {
             case "filter":
                 log.info("Filter meals table");
                 String startDateStr = request.getParameter("startDate");
-                LocalDate startDate = !isBlank(startDateStr) ? LocalDate.parse(startDateStr) : LocalDate.MIN;
+                LocalDate startDate = !isBlank(startDateStr) ? LocalDate.parse(startDateStr) : null;
                 String endDateStr = request.getParameter("endDate");
-                LocalDate endDate = !isBlank(endDateStr) ? LocalDate.parse(endDateStr) : LocalDate.MAX;
+                LocalDate endDate = !isBlank(endDateStr) ? LocalDate.parse(endDateStr) : null;
                 String startTimeStr = request.getParameter("startTime");
-                LocalTime startTime = !isBlank(startTimeStr) ? LocalTime.parse(startTimeStr) : LocalTime.MIN;
+                LocalTime startTime = !isBlank(startTimeStr) ? LocalTime.parse(startTimeStr) : null;
                 String endTimeStr = request.getParameter("endTime");
-                LocalTime endTime = !isBlank(endTimeStr) ? LocalTime.parse(endTimeStr) : LocalTime.MAX;
+                LocalTime endTime = !isBlank(endTimeStr) ? LocalTime.parse(endTimeStr) : null;
                 request.setAttribute("meals", MealRestController.getAllFiltered(startDate, endDate, startTime, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
