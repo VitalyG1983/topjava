@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -13,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
@@ -35,7 +36,13 @@ public class InMemoryUserRepository implements UserRepository {
             log.info("User saved with id={}", user.getId());
             return user;
         }
-        return repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
+        User u = repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
+        if (u != null) {
+            log.info("User updated with id={}", user.getId());
+        } else {
+            log.info("User not updated with id={}", user.getId());
+        }
+        return u;
     }
 
     @Override
@@ -54,7 +61,15 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public User getByEmail(String email) {
-        return email != null ? repository.values().stream().filter(user ->
-                StringUtils.equalsIgnoreCase(user.getEmail(), (email))).findFirst().orElse(null) : null;
+        User u = email != null
+                ? repository.values().stream().filter(user ->
+                equalsIgnoreCase(user.getEmail(), email)).findFirst().orElse(null)
+                : null;
+        if (u != null) {
+            log.info("User getByEmail with id={}, email={} ", u.getId(), email);
+        } else {
+            log.info("User not getByEmail with email={}", email);
+        }
+        return u;
     }
 }

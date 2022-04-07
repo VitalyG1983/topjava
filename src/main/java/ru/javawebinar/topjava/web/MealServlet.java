@@ -19,17 +19,18 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
-    private MealRestController mealUserController;
-    ConfigurableApplicationContext appCtx;
+    private MealRestController MealRestController;
+    private ConfigurableApplicationContext appCtx;
 
     @Override
     public void init() {
-        ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
-        this.appCtx = appCtx;
+        appCtx  = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         log.info("Bean definition names: {}", Arrays.toString(appCtx.getBeanDefinitionNames()));
-        this.mealUserController = appCtx.getBean(MealRestController.class);
+        MealRestController = appCtx.getBean(MealRestController.class);
     }
 
     @Override
@@ -56,9 +57,9 @@ public class MealServlet extends HttpServlet {
                         Integer.parseInt(request.getParameter("calories")));
                 log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
                 if (meal.isNew()) {
-                    mealUserController.create(meal);
+                    MealRestController.create(meal);
                 } else {
-                    mealUserController.update(meal, Integer.parseInt(id));
+                    MealRestController.update(meal, Integer.parseInt(id));
                 }
                 break;
             case "all":
@@ -75,35 +76,35 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 int id = getId(request);
                 log.info("Delete {}", id);
-                mealUserController.delete(id);
+                MealRestController.delete(id);
                 response.sendRedirect("meals");
                 break;
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        mealUserController.get(getId(request));
+                        MealRestController.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
             case "filter":
                 log.info("Filter meals table");
                 String startDateStr = request.getParameter("startDate");
-                LocalDate startDate = !startDateStr.isEmpty() ? LocalDate.parse(startDateStr) : LocalDate.MIN;
+                LocalDate startDate = !isBlank(startDateStr) ? LocalDate.parse(startDateStr) : LocalDate.MIN;
                 String endDateStr = request.getParameter("endDate");
-                LocalDate endDate = !endDateStr.isEmpty() ? LocalDate.parse(endDateStr) : LocalDate.MAX;
+                LocalDate endDate = !isBlank(endDateStr) ? LocalDate.parse(endDateStr) : LocalDate.MAX;
                 String startTimeStr = request.getParameter("startTime");
-                LocalTime startTime = !startTimeStr.isEmpty() ? LocalTime.parse(startTimeStr) : LocalTime.MIN;
+                LocalTime startTime = !isBlank(startTimeStr) ? LocalTime.parse(startTimeStr) : LocalTime.MIN;
                 String endTimeStr = request.getParameter("endTime");
-                LocalTime endTime = !endTimeStr.isEmpty() ? LocalTime.parse(endTimeStr) : LocalTime.MAX;
-                request.setAttribute("meals", mealUserController.getAllForUserFiltered(startDate, endDate, startTime, endTime));
+                LocalTime endTime = !isBlank(endTimeStr) ? LocalTime.parse(endTimeStr) : LocalTime.MAX;
+                request.setAttribute("meals", MealRestController.getAllFiltered(startDate, endDate, startTime, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
             default:
                 log.info("getAll() meals for selected User");
                 request.setAttribute("meals",
-                        mealUserController.getAllForUser());
+                        MealRestController.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }

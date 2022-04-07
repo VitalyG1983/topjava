@@ -3,9 +3,10 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +29,22 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        meal.setUserId(userId);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
+            meal.setUserId(userId);
             repository.put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> oldMeal.getUserId() == userId ? meal : oldMeal);
+        AtomicBoolean updated = new AtomicBoolean();
+        repository.computeIfPresent(meal.getId(), (id, oldMeal) -> {
+            if (oldMeal.getUserId() == userId) {
+                updated.set(true);
+                meal.setUserId(userId);
+            }
+            return updated.get() ? meal : oldMeal;
+        });
+        return updated.get() ? meal : null;
     }
 
     @Override
@@ -55,9 +64,16 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public List<Meal> getAllForUser(int userId) {
+    public List<Meal> getAll(int userId) {
         return repository.values().stream()
                 .filter(m -> m.getUserId() == userId)
+                .sorted(MEAL_DATE_TIME_COMPARATOR)
+                .collect(Collectors.toList());
+    }
+
+    public List<Meal> getAllFiltered(int userId, LocalDate start, LocalDate end) {
+        return repository.values().stream()
+                .filter(m -> m.getUserId() == userId && DateTimeUtil.isBetweenDate(m.getDate(), start, end))
                 .sorted(MEAL_DATE_TIME_COMPARATOR)
                 .collect(Collectors.toList());
     }

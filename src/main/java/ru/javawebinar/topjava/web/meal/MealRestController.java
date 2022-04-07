@@ -27,16 +27,15 @@ public class MealRestController {
         this.service = service;
     }
 
-    public List<MealTo> getAllForUserFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+    public List<MealTo> getAllFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("getAll() meals from user");
-        return MealsUtil.getToForUser(service.getAllForUser(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay(),
-                m -> DateTimeUtil.isBetweenDate(m.getDate(), startDate, endDate)
-                        && DateTimeUtil.isBetweenTime(m.getTime(), startTime, endTime));
+        return MealsUtil.filterByPredicate(service.getAllFiltered(SecurityUtil.authUserId(), startDate, endDate), SecurityUtil.authUserCaloriesPerDay(),
+                m -> DateTimeUtil.isBetweenTime(m.getTime(), startTime, endTime));
     }
 
-    public List<MealTo> getAllForUser() {
+    public List<MealTo> getAll() {
         log.info("getAll() meals from user");
-        return MealsUtil.getTos(service.getAllForUser(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay());
+        return MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay());
     }
 
     public Meal get(int id) {
