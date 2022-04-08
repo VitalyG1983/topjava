@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
@@ -49,7 +50,7 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public boolean delete(int id, int userId) {
         Map<Integer, Meal> mealMap = repository.get(userId);
-        if (mealMap == null || mealMap.isEmpty()) {
+        if (mealMap == null) {
             return false;
         }
         AtomicBoolean deleted = new AtomicBoolean();
@@ -63,7 +64,7 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public Meal get(int id, int userId) {
         Map<Integer, Meal> mealMap = repository.get(userId);
-        if (mealMap == null || mealMap.isEmpty()) {
+        if (mealMap == null) {
             return null;
         }
         Meal m = mealMap.get(id);
@@ -72,15 +73,19 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        Map<Integer, Meal> mealMap = repository.computeIfAbsent(userId, k -> new HashMap<>());
-        List<Meal> mealList = new ArrayList<>(mealMap.values());
-        mealList.sort(MEAL_DATE_TIME_COMPARATOR);
-        return mealList;
+        return getMealList(userId, m -> true);
     }
 
+    @Override
     public List<Meal> getAllFiltered(int userId, LocalDate start, LocalDate end) {
-        return getAll(userId).stream()
-                .filter(m -> DateTimeUtil.isBetweenDate(m.getDate(), start, end))
+        return getMealList(userId, m -> DateTimeUtil.isBetweenDate(m.getDate(), start, end));
+    }
+
+    private List<Meal> getMealList(int userId, Predicate<Meal> filter) {
+        Map<Integer, Meal> mealMap = repository.get(userId);
+        return mealMap == null || mealMap.isEmpty() ? new ArrayList<>() : mealMap.values().stream()
+                .filter(filter)
+                .sorted(MEAL_DATE_TIME_COMPARATOR)
                 .collect(Collectors.toList());
     }
 }
