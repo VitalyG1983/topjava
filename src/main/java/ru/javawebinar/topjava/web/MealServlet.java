@@ -23,42 +23,36 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
-    private MealRestController MealRestController;
+    private MealRestController mealRestController;
     private ConfigurableApplicationContext appCtx;
 
     @Override
     public void init() {
         appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         log.info("Bean definition names: {}", Arrays.toString(appCtx.getBeanDefinitionNames()));
-        MealRestController = appCtx.getBean(MealRestController.class);
+        mealRestController = appCtx.getBean(MealRestController.class);
     }
 
     @Override
     public void destroy() {
-        super.destroy();
         appCtx.close();
+        //     вызов super тут не очень нужен - родительская имплементация пустая
+        super.destroy();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String action = request.getParameter("action");
-        switch (action != null ? action : "all") {
-            case "createupdate":
-                String id = request.getParameter("id");
-                Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                        LocalDateTime.parse(request.getParameter("dateTime")), request.getParameter("description"),
-                        Integer.parseInt(request.getParameter("calories")));
-                log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-                if (meal.isNew()) {
-                    MealRestController.create(meal);
-                } else {
-                    MealRestController.update(meal, Integer.parseInt(id));
-                }
-                break;
-            case "all":
-            default:
-                break;
+        //     create/update
+        String id = request.getParameter("id");
+        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+                LocalDateTime.parse(request.getParameter("dateTime")), request.getParameter("description"),
+                Integer.parseInt(request.getParameter("calories")));
+        log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
+        if (meal.isNew()) {
+            mealRestController.create(meal);
+        } else {
+            mealRestController.update(meal, Integer.parseInt(id));
         }
         response.sendRedirect("meals");
     }
@@ -70,14 +64,14 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 int id = getId(request);
                 log.info("Delete {}", id);
-                MealRestController.delete(id);
+                mealRestController.delete(id);
                 response.sendRedirect("meals");
                 break;
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        MealRestController.get(getId(request));
+                        mealRestController.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
@@ -91,14 +85,13 @@ public class MealServlet extends HttpServlet {
                 LocalTime startTime = !isBlank(startTimeStr) ? LocalTime.parse(startTimeStr) : null;
                 String endTimeStr = request.getParameter("endTime");
                 LocalTime endTime = !isBlank(endTimeStr) ? LocalTime.parse(endTimeStr) : null;
-                request.setAttribute("meals", MealRestController.getAllFiltered(startDate, endDate, startTime, endTime));
+                request.setAttribute("meals", mealRestController.getAllFiltered(startDate, endDate, startTime, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
             default:
                 log.info("getAll() meals for selected User");
-                request.setAttribute("meals",
-                        MealRestController.getAll());
+                request.setAttribute("meals", mealRestController.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }

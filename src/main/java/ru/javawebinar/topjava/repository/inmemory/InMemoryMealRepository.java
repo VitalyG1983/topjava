@@ -7,9 +7,12 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -22,29 +25,20 @@ public class InMemoryMealRepository implements MealRepository {
 
     {
         for (Meal meal : MealsUtil.meals) {
-            save(meal, meal.getUserId());
+            save(meal, meal.getDate().getMonth() == Month.JANUARY ? 1 : 2);
         }
     }
 
     @Override
     public Meal save(Meal meal, int userId) {
-        Map<Integer, Meal> mealMap = repository.computeIfAbsent(userId, k -> new HashMap<>());
+        Map<Integer, Meal> mealMap = repository.computeIfAbsent(userId, k -> new ConcurrentHashMap<>());
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
-            meal.setUserId(userId);
             mealMap.put(meal.getId(), meal);
             return meal;
         }
         // handle case: update, but not present in storage
-        AtomicBoolean updated = new AtomicBoolean();
-        mealMap.computeIfPresent(meal.getId(), (id, oldMeal) -> {
-            if (oldMeal.getUserId() == userId) {
-                updated.set(true);
-                meal.setUserId(userId);
-            }
-            return updated.get() ? meal : oldMeal;
-        });
-        return updated.get() ? meal : null;
+        return mealMap.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
@@ -53,12 +47,8 @@ public class InMemoryMealRepository implements MealRepository {
         if (mealMap == null) {
             return false;
         }
-        AtomicBoolean deleted = new AtomicBoolean();
-        mealMap.computeIfPresent(id, (key, oldValue) -> {
-            deleted.set(oldValue.getUserId() == userId);
-            return deleted.get() ? null : oldValue;
-        });
-        return deleted.get();
+        Meal m = mealMap.remove(id);
+        return m != null;
     }
 
     @Override
@@ -67,8 +57,7 @@ public class InMemoryMealRepository implements MealRepository {
         if (mealMap == null) {
             return null;
         }
-        Meal m = mealMap.get(id);
-        return m != null && (m.getUserId() == userId) ? m : null;
+        return mealMap.get(id);
     }
 
     @Override
