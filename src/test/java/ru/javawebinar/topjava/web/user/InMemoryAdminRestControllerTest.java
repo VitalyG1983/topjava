@@ -16,7 +16,6 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Ignore
 public class InMemoryAdminRestControllerTest {
     private static final Logger log = LoggerFactory.getLogger(InMemoryAdminRestControllerTest.class);
-
     private static ConfigurableApplicationContext appCtx;
     private static AdminRestController controller;
     private static InMemoryUserRepository repository;

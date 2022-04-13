@@ -23,3 +23,23 @@ CREATE TABLE user_roles
     CONSTRAINT user_roles_idx UNIQUE (user_id, role),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+create table meals
+(
+    id          integer default nextval('global_seq'::regclass) not null
+        constraint table_name_pk
+            primary key,
+    user_id     integer                                         not null
+        constraint meals_users_id_fk
+            references users
+            on delete cascade,
+    date_time   timestamp                                       not null,
+    description varchar                                         not null,
+    calories    integer default 0                               not null
+);
+
+alter table meals
+    owner to "user";
+
+create unique index meals_user_id_date_time_uindex
+    on meals (user_id asc, date_time desc);
