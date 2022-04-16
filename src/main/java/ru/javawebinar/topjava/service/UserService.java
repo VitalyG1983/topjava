@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
@@ -14,8 +13,9 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 public class UserService {
     private final UserRepository repository;
 
-    public UserService(UserRepository @NotNull ... repository) {
-        this.repository = repository[0];
+    @SuppressWarnings("all")
+    public UserService(UserRepository repository) {
+        this.repository = repository;
     }
 
     public User create(User user) {

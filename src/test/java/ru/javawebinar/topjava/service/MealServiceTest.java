@@ -53,8 +53,7 @@ public class MealServiceTest {
     @Test
     public void duplicateDateTimeCreate() {
         assertThrows(DataAccessException.class, () ->
-                service.create(new Meal(null, LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0),
-                        "duplicate meal", 111), USER_ID));
+                service.create(new Meal(null, userMeal1.getDateTime(), "duplicate meal", 111), USER_ID));
     }
 
     @Test
@@ -69,6 +68,11 @@ public class MealServiceTest {
     }
 
     @Test
+    public void deletedNotFoundID() {
+        assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND, USER_ID));
+    }
+
+    @Test
     public void get() {
         Meal meal = service.get(USER_MEAL1_ID, USER_ID);
         assertMatch(meal, MealTestData.userMeal1);
@@ -80,10 +84,15 @@ public class MealServiceTest {
     }
 
     @Test
+    public void getNotFoundID() {
+        assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, USER_ID));
+    }
+
+    @Test
     public void update() {
         Meal updated = getUpdated();
         service.update(updated, USER_ID);
-        assertMatch(service.get(USER_MEAL1_ID, USER_ID), updated);
+        assertMatch(service.get(USER_MEAL1_ID, USER_ID), getUpdated());
     }
 
     @Test
@@ -103,5 +112,11 @@ public class MealServiceTest {
         List<Meal> all = service.getBetweenInclusive(LocalDate.of(2020, Month.JANUARY, 25),
                 LocalDate.of(2020, Month.JANUARY, 29), USER_ID);
         assertMatch(all, userMeal3, userMeal1);
+    }
+
+    @Test
+    public void getBetweenInclusiveNull() {
+        List<Meal> all = service.getBetweenInclusive(null, null, USER_ID);
+        assertMatch(all, userMeal2, userMeal3, userMeal1);
     }
 }

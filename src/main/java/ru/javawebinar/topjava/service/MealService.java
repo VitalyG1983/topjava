@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
@@ -17,8 +16,9 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 public class MealService {
     private final MealRepository repository;
 
-    public MealService(@NonNull MealRepository...repository) {
-        this.repository = repository[0];
+    @SuppressWarnings("all")
+    public MealService(MealRepository repository) {
+        this.repository = repository;
     }
 
     public Meal get(int id, int userId) {

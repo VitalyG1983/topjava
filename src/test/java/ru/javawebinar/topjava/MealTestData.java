@@ -2,7 +2,6 @@ package ru.javawebinar.topjava;
 
 import ru.javawebinar.topjava.model.Meal;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
@@ -11,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
-    public static final int USER_MEAL1_ID = START_SEQ+3;
+    public static final int USER_MEAL1_ID = START_SEQ + 3;
     public static final int USER_MEAL2_ID = START_SEQ + 4;
     public static final int USER_MEAL3_ID = START_SEQ + 5;
     public static final int ADMIN_MEAL1_ID = START_SEQ + 6;
@@ -27,7 +26,7 @@ public class MealTestData {
     public static final Meal adminMeal3 = new Meal(ADMIN_MEAL3_ID, LocalDateTime.of(2020, Month.DECEMBER, 31, 20, 0), "Admin Ужин", 410);
 
     public static Meal getNew() {
-        return new Meal(null, LocalDate.now().atStartOfDay(), "new meal", 999);
+        return new Meal(null, LocalDateTime.of(2012, 12, 12, 0, 0, 0), "new meal", 999);
     }
 
     public static Meal getUpdated() {
