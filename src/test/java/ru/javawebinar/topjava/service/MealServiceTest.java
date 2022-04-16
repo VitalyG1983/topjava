@@ -14,7 +14,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 
@@ -63,12 +62,12 @@ public class MealServiceTest {
     }
 
     @Test
-    public void deletedNotFound() {
+    public void deletedNotOwnMeal() {
         assertThrows(NotFoundException.class, () -> service.delete(USER_MEAL1_ID, ADMIN_ID));
     }
 
     @Test
-    public void deletedNotFoundID() {
+    public void deletedNotFoundId() {
         assertThrows(NotFoundException.class, () -> service.delete(NOT_FOUND, USER_ID));
     }
 
@@ -79,12 +78,12 @@ public class MealServiceTest {
     }
 
     @Test
-    public void getNotFound() {
+    public void getNotOwnMeal() {
         assertThrows(NotFoundException.class, () -> service.get(USER_MEAL1_ID, ADMIN_ID));
     }
 
     @Test
-    public void getNotFoundID() {
+    public void getNotFoundMeal() {
         assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND, USER_ID));
     }
 

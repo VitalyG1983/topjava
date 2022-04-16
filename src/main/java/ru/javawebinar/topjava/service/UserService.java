@@ -13,7 +13,6 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 public class UserService {
     private final UserRepository repository;
 
-    @SuppressWarnings("all")
     public UserService(UserRepository repository) {
         this.repository = repository;
     }
