@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
@@ -8,10 +9,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.time.LocalDateTime.of;
+import static ru.javawebinar.topjava.UserTestData.admin;
+import static ru.javawebinar.topjava.UserTestData.user;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
     public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator();
+    public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER_IGNORING = MatcherFactory.usingIgnoringFieldsComparator("user");
 
     public static final int NOT_FOUND = 10;
     public static final int MEAL1_ID = START_SEQ + 3;
@@ -28,9 +32,20 @@ public class MealTestData {
     public static final Meal adminMeal2 = new Meal(ADMIN_MEAL_ID + 1, of(2020, Month.JANUARY, 31, 21, 0), "Админ ужин", 1500);
 
     public static final List<Meal> meals = Arrays.asList(meal7, meal6, meal5, meal4, meal3, meal2, meal1);
-
-    public static Meal getNew() {
-        return new Meal(null, of(2020, Month.FEBRUARY, 1, 18, 0), "Созданный ужин", 300);
+static {
+    meal1.setUser(user);
+    meal2.setUser(user);
+    meal3.setUser(user);
+    meal4.setUser(user);
+    meal5.setUser(user);
+    meal6.setUser(user);
+    meal7.setUser(user);
+    adminMeal1.setUser(admin);
+}
+    public static Meal getNew(User user) {
+        Meal meal = new Meal(null, of(2020, Month.FEBRUARY, 1, 18, 0), "Созданный ужин", 300);
+        meal.setUser(user);
+        return meal;
     }
 
     public static Meal getUpdated() {

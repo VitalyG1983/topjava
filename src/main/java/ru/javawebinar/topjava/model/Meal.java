@@ -12,7 +12,8 @@ import java.time.LocalTime;
 @Table(name = "meals")
 public class Meal extends AbstractBaseEntity {
 
-    @Basic
+    //@Convert(converter = LocalDateTime.class)
+    @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)
