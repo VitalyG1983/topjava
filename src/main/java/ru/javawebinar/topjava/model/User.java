@@ -47,7 +47,7 @@ public class User extends AbstractNamedEntity {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "uk_user_roles")})
     @Column(name = "role")
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<Role> roles;
 
     @Column(name = "calories_per_day", nullable = false, columnDefinition = "int default 2000")

@@ -8,9 +8,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@NamedQueries({@NamedQuery(name = Meal.MEALS_ALL_SORTED, query = "SELECT m FROM Meal m " +
+        "LEFT JOIN FETCH m.user " +
+        "WHERE m.user.id=:userId " +
+        "ORDER BY m.dateTime " +
+        "DESC"),
+        @NamedQuery(name = Meal.GET_BETWEEN_HALF_OPEN, query = "SELECT m FROM Meal m " +
+                "LEFT JOIN FETCH m.user " +
+                "WHERE m.user.id=:userId AND :startDateTime<= m.dateTime AND m.dateTime <:endDateTime " +
+                "ORDER BY m.dateTime " +
+                "DESC")
+})
+
 @Entity
 @Table(name = "meals")
 public class Meal extends AbstractBaseEntity {
+    public static final String MEALS_ALL_SORTED = "Meal.getAllSorted";
+    public static final String GET_BETWEEN_HALF_OPEN = "Meal.GET_BETWEEN_HALF_OPEN";
 
     //@Convert(converter = LocalDateTime.class)
     @Column(name = "date_time", nullable = false)
@@ -25,7 +39,7 @@ public class Meal extends AbstractBaseEntity {
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Meal() {

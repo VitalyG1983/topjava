@@ -5,12 +5,11 @@ import javax.persistence.Converter;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@Converter(autoApply = true)
+@Converter()
 public class DatePersistenceConverter implements
         AttributeConverter<Date, Timestamp> {
     @Override
     public java.sql.Timestamp convertToDatabaseColumn(Date entityValue) {
-       // entityValue.getTime()
         return new Timestamp(entityValue.getTime());
     }
 
