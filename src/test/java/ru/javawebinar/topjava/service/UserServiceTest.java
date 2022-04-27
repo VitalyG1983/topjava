@@ -1,6 +1,9 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -11,12 +14,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.util.TestTimeWatcher;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.util.TestTimeWatcher.testTimeArray;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -28,6 +33,15 @@ public class UserServiceTest {
 
     @Autowired
     private UserService service;
+
+    @AfterClass
+    public static void afterClass() {
+        System.out.println("\nUserServiceTest.class tests complete, time spent for tests:");
+        testTimeArray.forEach(System.out::println);
+    }
+
+    @Rule
+    public final TestRule watchUserTest = new TestTimeWatcher();
 
     @Test
     public void create() {

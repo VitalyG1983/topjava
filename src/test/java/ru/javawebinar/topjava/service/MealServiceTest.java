@@ -1,6 +1,9 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -9,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.TestTimeWatcher;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.transaction.Transactional;
@@ -21,6 +25,7 @@ import static ru.javawebinar.topjava.MealTestData.getNew;
 import static ru.javawebinar.topjava.MealTestData.getUpdated;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.util.TestTimeWatcher.testTimeArray;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -32,6 +37,15 @@ public class MealServiceTest {
 
     @Autowired
     private MealService service;
+
+    @AfterClass
+    public static void afterClass() {
+        System.out.println("\nMealServiceTest.class tests complete, time spent for tests:");
+        testTimeArray.forEach(System.out::println);
+    }
+
+    @Rule
+    public final TestRule watchMealTest = new TestTimeWatcher();
 
     @Test
     public void delete() {
