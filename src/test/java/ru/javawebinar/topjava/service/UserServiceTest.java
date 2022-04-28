@@ -38,6 +38,7 @@ public class UserServiceTest {
     public static void afterClass() {
         System.out.println("\nUserServiceTest.class tests complete, time spent for tests:");
         testTimeArray.forEach(System.out::println);
+        testTimeArray.clear();
     }
 
     @Rule

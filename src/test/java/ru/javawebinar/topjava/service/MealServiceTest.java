@@ -1,8 +1,6 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.AfterClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.TestTimeWatcher;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Month;
 
@@ -42,6 +39,7 @@ public class MealServiceTest {
     public static void afterClass() {
         System.out.println("\nMealServiceTest.class tests complete, time spent for tests:");
         testTimeArray.forEach(System.out::println);
+        testTimeArray.clear();
     }
 
     @Rule
@@ -64,7 +62,6 @@ public class MealServiceTest {
     }
 
     @Test
-    @Transactional
     public void create() {
         Meal created = service.create(getNew(user), USER_ID);
         int newId = created.id();
@@ -81,7 +78,6 @@ public class MealServiceTest {
     }
 
     @Test
-    @Transactional
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
         MEAL_MATCHER_IGNORING.assertMatch(actual, adminMeal1);
@@ -98,7 +94,6 @@ public class MealServiceTest {
     }
 
     @Test
-    @Transactional
     public void update() {
         Meal updated = getUpdated(user);
         service.update(updated, USER_ID);
@@ -106,20 +101,17 @@ public class MealServiceTest {
     }
 
     @Test
-    @Transactional
     public void updateNotOwn() {
         assertThrows(NotFoundException.class, () -> service.update(meal1, ADMIN_ID));
         MEAL_MATCHER_IGNORING.assertMatch(service.get(MEAL1_ID, USER_ID), meal1);
     }
 
     @Test
-    @Transactional
     public void getAll() {
         MEAL_MATCHER_IGNORING.assertMatch(service.getAll(USER_ID), meals);
     }
 
     @Test
-    @Transactional
     public void getBetweenInclusive() {
         MEAL_MATCHER_IGNORING.assertMatch(service.getBetweenInclusive(
                         LocalDate.of(2020, Month.JANUARY, 30),
@@ -128,7 +120,6 @@ public class MealServiceTest {
     }
 
     @Test
-    @Transactional
     public void getBetweenWithNullDates() {
         MEAL_MATCHER_IGNORING.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
     }
