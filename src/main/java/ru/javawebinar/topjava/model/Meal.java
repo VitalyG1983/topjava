@@ -26,7 +26,6 @@ public class Meal extends AbstractBaseEntity {
     public static final String MEALS_ALL_SORTED = "Meal.getAllSorted";
     public static final String GET_BETWEEN_HALF_OPEN = "Meal.getBetweenHalfOpen";
 
-    //@Convert(converter = LocalDateTime.class)
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
@@ -106,4 +105,6 @@ public class Meal extends AbstractBaseEntity {
                 ", calories=" + calories +
                 '}';
     }
+
+
 }
