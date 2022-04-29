@@ -21,7 +21,7 @@ import java.time.LocalTime;
                 "DESC")
 })
 @Entity
-@Table(name = "meals")
+@Table(name = "meals", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "date_time"}))
 public class Meal extends AbstractBaseEntity {
     public static final String MEALS_ALL_SORTED = "Meal.getAllSorted";
     public static final String GET_BETWEEN_HALF_OPEN = "Meal.getBetweenHalfOpen";
