@@ -27,7 +27,7 @@ public class JpaMealRepository implements MealRepository {
             em.persist(meal);
             return meal;
         } else {
-            if (checkUserId(meal.getId(), userId) != null) {
+            if (get(meal.getId(), userId) != null) {
                 meal.setUser(em.getReference(User.class, userId));
                 return em.merge(meal);
             } else return null;
@@ -37,31 +37,29 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public boolean delete(int id, int userId) {
-        Query query = em.createQuery("DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:userId");
-        return query.setParameter("id", id).setParameter("userId", userId).executeUpdate() != 0;
+        return em.createNamedQuery(Meal.DELETE)
+                .setParameter("id", id)
+                .setParameter("userId", userId).executeUpdate() != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        return checkUserId(id, userId);
+        Meal meal = em.find(Meal.class, id);
+        return meal != null && meal.getUser().getId() == userId ? meal : null;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return em.createNamedQuery(Meal.MEALS_ALL_SORTED, Meal.class)
+        return em.createNamedQuery(Meal.GET_ALL_SORTED, Meal.class)
                 .setParameter("userId", userId).getResultList();
     }
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        return em.createNamedQuery(Meal.GET_BETWEEN_HALF_OPEN, Meal.class).setParameter("userId", userId)
+        return em.createNamedQuery(Meal.GET_BETWEEN_HALF_OPEN, Meal.class)
+                .setParameter("userId", userId)
                 .setParameter("startDateTime", startDateTime)
                 .setParameter("endDateTime", endDateTime)
                 .getResultList();
-    }
-
-    private Meal checkUserId(int mealId, int userId) {
-        Meal meal = em.find(Meal.class, mealId);
-        return meal != null && meal.getUser().getId() == userId ? meal : null;
     }
 }
