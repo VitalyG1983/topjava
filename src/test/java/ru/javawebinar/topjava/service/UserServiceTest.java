@@ -5,8 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,6 +21,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.util.TestTimeWatcher.printTestTime;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -31,20 +30,17 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class UserServiceTest {
-    private static final Logger log = LoggerFactory.getLogger(UserServiceTest.class);
 
     @Autowired
     private UserService service;
 
-    @AfterClass
-    public static void afterClass() {
-        log.info("\n\nUserServiceTest.class tests complete, time spent for tests:");
-        log.info(TestTimeWatcher.getJoinedMessage());
-        TestTimeWatcher.setJoinedMessage("");
-    }
-
     @Rule
     public final TestRule watchUserTest = new TestTimeWatcher();
+
+    @AfterClass
+    public static void afterClass() {
+        printTestTime("UserServiceTest.class");
+    }
 
     @Test
     public void create() {

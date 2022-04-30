@@ -1,10 +1,10 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,12 +19,10 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import static org.junit.Assert.assertThrows;
-import static ru.javawebinar.topjava.MealTestData.NOT_FOUND;
-import static ru.javawebinar.topjava.MealTestData.getNew;
-import static ru.javawebinar.topjava.MealTestData.getUpdated;
 import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.UserTestData.*;
-import static ru.javawebinar.topjava.util.TestTimeWatcher.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.util.TestTimeWatcher.printTestTime;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -33,20 +31,17 @@ import static ru.javawebinar.topjava.util.TestTimeWatcher.*;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
-    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
     @Autowired
     private MealService service;
 
-    @AfterClass
-    public static void afterClass() {
-        log.info("\n\nMealServiceTest.class tests complete, time spent for tests:");
-        log.info(TestTimeWatcher.getJoinedMessage());
-        TestTimeWatcher.setJoinedMessage("");
-    }
-
     @Rule
     public final TestRule watchMealTest = new TestTimeWatcher();
+
+    @AfterClass
+    public static void afterClass() {
+        printTestTime("MealServiceTest.class");
+    }
 
     @Test
     public void delete() {
@@ -66,9 +61,9 @@ public class MealServiceTest {
 
     @Test
     public void create() {
-        Meal created = service.create(getNew(user), USER_ID);
+        Meal created = service.create(getNew(), USER_ID);
         int newId = created.id();
-        Meal newMeal = getNew(user);
+        Meal newMeal = getNew();
         newMeal.setId(newId);
         MEAL_MATCHER.assertMatch(created, newMeal);
         MEAL_MATCHER.assertMatch(service.get(newId, USER_ID), newMeal);
@@ -98,9 +93,9 @@ public class MealServiceTest {
 
     @Test
     public void update() {
-        Meal updated = getUpdated(user);
+        Meal updated = getUpdated();
         service.update(updated, USER_ID);
-        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated(user));
+        MEAL_MATCHER.assertMatch(service.get(MEAL1_ID, USER_ID), getUpdated());
     }
 
     @Test
