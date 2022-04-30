@@ -9,7 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 public class TestTimeWatcher extends Stopwatch {
     private static final Logger log = LoggerFactory.getLogger(TestTimeWatcher.class);
-    private static StringBuffer joinMessage = new StringBuffer();
+    private static StringBuilder joinMessage = new StringBuilder();
+    private static final int SECOND_IN_NANOS = 1000000000;
 
     @Override
     protected void finished(long nanos, Description description) {
@@ -19,12 +20,14 @@ public class TestTimeWatcher extends Stopwatch {
     }
 
     private String testTime(long nanos) {
-        return TimeUnit.SECONDS.convert(nanos, TimeUnit.NANOSECONDS) > 0 ? TimeUnit.SECONDS.convert(nanos, TimeUnit.NANOSECONDS) + " sec " +
-                TimeUnit.MILLISECONDS.convert(nanos % 1000000000, TimeUnit.NANOSECONDS) : String.valueOf(TimeUnit.MILLISECONDS.convert(nanos, TimeUnit.NANOSECONDS));
+        return TimeUnit.SECONDS.convert(nanos, TimeUnit.NANOSECONDS) > 0
+                ? TimeUnit.SECONDS.convert(nanos, TimeUnit.NANOSECONDS) + " sec " +
+                TimeUnit.MILLISECONDS.convert(nanos % SECOND_IN_NANOS, TimeUnit.NANOSECONDS)
+                : String.valueOf(TimeUnit.MILLISECONDS.convert(nanos, TimeUnit.NANOSECONDS));
     }
 
     public static void printTestTime(String clazz) {
         log.info("\n\n" + clazz + " tests complete, time spent for tests:" + joinMessage);
-        joinMessage.delete(0, joinMessage.length());
+        joinMessage.setLength(0);
     }
 }

@@ -15,13 +15,16 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.TestTimeWatcher;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Month;
 
 import static org.junit.Assert.assertThrows;
+import static ru.javawebinar.topjava.MealTestData.NOT_FOUND;
+import static ru.javawebinar.topjava.MealTestData.getNew;
+import static ru.javawebinar.topjava.MealTestData.getUpdated;
 import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.util.TestTimeWatcher.printTestTime;
 
 @ContextConfiguration({
