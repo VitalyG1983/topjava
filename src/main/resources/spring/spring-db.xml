@@ -42,6 +42,20 @@
         </property>
     </bean>
 
+ <!--   <bean id="entityInformation" class="org.springframework.data.jpa.repository.support.JpaEntityInformation"
+          abstract="true">
+    </bean>-->
+ <!--   <bean id="jpaMealclass" class="ru.javawebinar.topjava.repository.datajpa.DataJpaMealRepository">
+        <constructor-arg index="0" ref="entityInformation"/>
+    </bean>-->
+
+  <!--  <bean id="domainClass" class="ru.javawebinar.topjava.model.Meal>">
+    </bean>-->
+
+  <!--  <bean id="em" class="javax.persistence.EntityManager" abstract="true">
+        <constructor-arg value="em"/>
+    </bean>-->
+
     <tx:annotation-driven/>
 
     <!-- Transaction manager for a single JPA EntityManagerFactory (alternative to JTA) -->
