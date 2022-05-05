@@ -17,7 +17,7 @@ public class Profiles {
     //  Get DB profile depending of DB driver in classpath
     public static String getActiveDbProfile() {
         if (ClassUtils.isPresent("org.postgresql.Driver", null)) {
-            return POSTGRES_DB;
+            return POSTGRES_DB + ", " + DATAJPA;
         } else if (ClassUtils.isPresent("org.hsqldb.jdbcDriver", null)) {
             return HSQL_DB;
         } else {
