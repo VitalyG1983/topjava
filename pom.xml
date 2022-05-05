@@ -213,6 +213,17 @@
         </profile>
 
         <profile>
+            <id>jpa</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-jpa</artifactId>
+                    <version>2.6.2</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
         <id>datajpa</id>
             <dependencies>
             <dependency>
@@ -224,9 +235,6 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties>
-                <spring.profiles.active>datajpa</spring.profiles.active>
-            </properties>
         </profile>
     </profiles>
 
