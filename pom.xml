@@ -87,11 +87,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency>
-    <!--    <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>${spring-data-jpa.version}</version>
-        </dependency>-->
+           <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-jpa</artifactId>
+                <version>${spring-data-jpa.version}</version>
+            </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -213,24 +213,38 @@
         </profile>
 
         <profile>
+            <id>jdbc</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-jdbc</artifactId>
+                    <version>${spring.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
             <id>jpa</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-orm</artifactId>
+                    <version>${spring.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>datajpa</id>
+            <properties>
+                <spring-data-jpa.version>2.6.2</spring-data-jpa.version>
+            </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.data</groupId>
                     <artifactId>spring-data-jpa</artifactId>
                     <version>2.6.2</version>
                 </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-        <id>datajpa</id>
-            <dependencies>
-            <dependency>
-                <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-jpa</artifactId>
-                <version>${spring-data-jpa.version}</version>
-            </dependency>
             </dependencies>
             <activation>
                 <activeByDefault>true</activeByDefault>
