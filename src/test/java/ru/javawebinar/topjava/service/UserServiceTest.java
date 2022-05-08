@@ -41,7 +41,7 @@ public abstract class UserServiceTest {
     public final TimeWatcher timeWatcher = new TimeWatcher();
 
     @Autowired
-    private UserService service;
+    UserService service;
 
     @Autowired
     private CacheManager cacheManager;
