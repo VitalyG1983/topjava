@@ -8,12 +8,12 @@ import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 
 @ActiveProfiles("datajpa")
-public class MealRepoDataJpaTest extends MealServiceTest{
+public class MealRepoDataJpaTest extends MealServiceTest {
 
     @Test
     @Override
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
-        MEAL_MATCHER_WITH_USER.assertMatch(actual, getMealWithUser());
+        MEAL_MATCHER_WITH_USER.assertMatch(actual, adminMeal1WithUser);
     }
 }
