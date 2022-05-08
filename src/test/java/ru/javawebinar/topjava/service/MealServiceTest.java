@@ -40,7 +40,7 @@ public abstract class MealServiceTest {
     public final TimeWatcher timeWatcher = new TimeWatcher();
 
     @Autowired
-    private MealService service;
+    MealService service;
 
     @Autowired
     private CacheManager cacheManager;

@@ -27,9 +27,16 @@ public class DataJpaUserRepository implements UserRepository {
         return crudRepository.delete(id) != 0;
     }
 
-    @Override
+    //   old -  without mealList
+/*    @Override
     public User get(int id) {
         return crudRepository.findById(id).orElse(null);
+    }*/
+
+    //   new -  with mealList
+    @Override
+    public User get(int id) {
+        return crudRepository.getUserWithMeals(id);
     }
 
     @Override

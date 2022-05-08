@@ -1,7 +1,5 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
@@ -33,9 +31,17 @@ public class DataJpaMealRepository implements MealRepository {
         return crudMealRepository.delete(id, userId) != 0;
     }
 
-    @Override
+    //   old without User
+  /*  @Override
     public Meal get(int id, int userId) {
         Meal m = crudMealRepository.findById(id).orElse(null);
+        return m != null && m.getUser().getId() == userId ? m : null;
+    }*/
+
+    //   new -  with User
+    @Override
+    public Meal get(int id, int userId) {
+        Meal m = crudMealRepository.getUserWithMeals(id, userId);
         return m != null && m.getUser().getId() == userId ? m : null;
     }
 
