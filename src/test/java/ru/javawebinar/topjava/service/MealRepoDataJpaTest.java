@@ -14,6 +14,6 @@ public class MealRepoDataJpaTest extends MealServiceTest {
     @Override
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
-        MEAL_MATCHER_WITH_USER.assertMatch(actual, adminMeal1WithUser);
+        MEAL_MATCHER_WITH_USER.assertMatch(actual, adminMeal1);
     }
 }

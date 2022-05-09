@@ -17,8 +17,13 @@ import java.util.List;
 public class SpringMain {
     public static void main(String[] args) {
         // java 7 automatic resource management (ARM)
-        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext(new String[]{"spring/spring-app.xml", "spring/spring-db.xml"},false)) {
-            appCtx.getEnvironment().setActiveProfiles("postgres", "jpa");
+        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext(new String[]{"spring/spring-app.xml", "spring/spring-db.xml"}, false)) {
+            final String activeDbProfile = Profiles.getActiveDbProfile();
+            if (activeDbProfile.isBlank()) {
+                System.out.println("Please choose DB profile");
+                return;
+            }
+            appCtx.getEnvironment().setActiveProfiles(activeDbProfile, "jpa");
             appCtx.refresh();
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
