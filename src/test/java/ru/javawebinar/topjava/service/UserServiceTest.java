@@ -61,7 +61,6 @@ public abstract class UserServiceTest {
         cacheManager.getCache("users").clear();
     }
 
-
     @Test
     public void create() {
         User created = service.create(getNew());

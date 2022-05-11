@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
@@ -17,8 +19,10 @@ public class DataJpaMealRepository implements MealRepository {
         this.crudUserRepository = crudUserRepository;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Meal save(Meal meal, int userId) {
+
         meal.setUser(crudUserRepository.getById(userId));
         if (!meal.isNew() && (get(meal.id(), userId) == null)) {
             return null;
@@ -32,17 +36,14 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     //   old without User
-  /*  @Override
-    public Meal get(int id, int userId) {
-        Meal m = crudMealRepository.findById(id).orElse(null);
-        return m != null && m.getUser().getId() == userId ? m : null;
-    }*/
-
-    //   new -  with User
     @Override
     public Meal get(int id, int userId) {
-        Meal m = crudMealRepository.getUserWithMeals(id, userId);
-        return m != null && m.getUser().getId() == userId ? m : null;
+        return crudMealRepository.findById(id).filter(meal->meal.getUser().getId()==userId).orElse(null);
+    }
+
+    //   new -  with User
+    public Meal getWithUser(int id, int userId) {
+        return crudMealRepository.getWithUser(id, userId);
     }
 
     @Override
@@ -53,5 +54,9 @@ public class DataJpaMealRepository implements MealRepository {
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return crudMealRepository.getBetween(userId, startDateTime, endDateTime);
+    }
+
+    public CrudMealRepository getCrudMealRepository() {
+        return crudMealRepository;
     }
 }

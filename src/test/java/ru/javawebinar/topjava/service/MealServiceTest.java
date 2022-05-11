@@ -1,9 +1,11 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,7 +27,6 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 import static ru.javawebinar.topjava.util.TimeWatcher.log;
 import static ru.javawebinar.topjava.util.TimeWatcher.results;
 
-
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-db.xml"
@@ -42,9 +43,6 @@ public abstract class MealServiceTest {
     @Autowired
     MealService service;
 
-    @Autowired
-    private CacheManager cacheManager;
-
     @AfterClass
     public static void printResult() {
         log.info("\n---------------------------------" +
@@ -53,11 +51,6 @@ public abstract class MealServiceTest {
                 results +
                 "\n---------------------------------");
         results.setLength(0);
-    }
-
-    @Before
-    public void setup() {
-        cacheManager.getCache("meals").clear();
     }
 
     @Test

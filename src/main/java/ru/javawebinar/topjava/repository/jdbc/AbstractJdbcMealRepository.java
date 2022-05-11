@@ -13,35 +13,33 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public abstract class JdbcMealRepositoryAbstract<DT> implements MealRepository {
+public abstract class AbstractJdbcMealRepository<DT> implements MealRepository {
 
-    static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
+    static private final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
 
-    final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    final SimpleJdbcInsert insertMeal;
+    private final SimpleJdbcInsert insertMeal;
 
-    protected abstract DT getDateTime(LocalDateTime dateTime);
-
-    public JdbcMealRepositoryAbstract(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public AbstractJdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.insertMeal = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("meals")
                 .usingGeneratedKeyColumns("id");
-
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+    protected abstract DT getDateTime(LocalDateTime dateTime);
+
     @Override
     public Meal save(Meal meal, int userId) {
-        DT dateTime = getDateTime(meal.getDateTime());
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
-                .addValue("date_time", dateTime)
+                .addValue("date_time", getDateTime(meal.getDateTime()))
                 .addValue("user_id", userId);
 
         if (meal.isNew()) {
@@ -78,10 +76,8 @@ public abstract class JdbcMealRepositoryAbstract<DT> implements MealRepository {
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        DT startDt = getDateTime(startDateTime);
-        DT endDt = getDateTime(endDateTime);
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=?  AND date_time >=  ? AND date_time < ? ORDER BY date_time DESC",
-                ROW_MAPPER, userId, startDt, endDt);
+                ROW_MAPPER, userId, getDateTime(startDateTime), getDateTime(endDateTime));
     }
 }
