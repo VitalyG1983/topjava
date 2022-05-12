@@ -28,10 +28,7 @@ public class MealService {
 
     public Meal getWithUser(int id, int userId) {
             return checkNotFoundWithId((((DataJpaMealRepository) repository).getWithUser(id, userId)), id);
-           // return checkNotFoundWithId(((DataJpaMealRepository) repository).getWithUser(id, userId), id);
-    /*    DataJpaMealRepository djmr=((MealRepository) repository).getTargetSource().getTarget();
-            return checkNotFoundWithId(((Advised) repository).getTargetSource().getTarget().getWithUser(id, userId), id);
-    */}
+     }
 
     public void delete(int id, int userId) {
         checkNotFoundWithId(repository.delete(id, userId), id);
