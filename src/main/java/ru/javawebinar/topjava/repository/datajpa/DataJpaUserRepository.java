@@ -48,8 +48,4 @@ public class DataJpaUserRepository implements UserRepository {
     public List<User> getAll() {
         return crudRepository.findAll(SORT_NAME_EMAIL);
     }
-
-    public CrudUserRepository getCrudRepository() {
-        return crudRepository;
-    }
 }
