@@ -27,14 +27,12 @@ public class DataJpaUserRepository implements UserRepository {
         return crudRepository.delete(id) != 0;
     }
 
-    //   old -  without mealList
     @Override
     public User get(int id) {
         return crudRepository.findById(id).orElse(null);
     }
 
-    //   new -  with mealList
-    //@Override
+    @Override
     public User getWithMeals(int id) {
         return crudRepository.getWithMeals(id);
     }

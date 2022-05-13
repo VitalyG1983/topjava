@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.repository.datajpa.DataJpaMealRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,13 +26,12 @@ public class MealService {
     }
 
     public Meal getWithUser(int id, int userId) {
-            return checkNotFoundWithId((repository.getWithUser(id, userId)), id);
+            return checkNotFoundWithId(repository.getWithUser(id, userId), id);
      }
 
     public void delete(int id, int userId) {
         checkNotFoundWithId(repository.delete(id, userId), id);
     }
-
 
     public List<Meal> getBetweenInclusive(@Nullable LocalDate startDate, @Nullable LocalDate endDate, int userId) {
         return repository.getBetweenHalfOpen(atStartOfDayOrMin(startDate), atStartOfNextDayOrMax(endDate), userId);

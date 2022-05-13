@@ -20,7 +20,7 @@ public class DataJpaUserServiceTest extends AbstractUserServiceTest {
     }
 
     @Test
-    public void getNotFound() {
+    public void getWithMealsNotFound() {
         assertThrows(NotFoundException.class, () -> service.getWithMeals(NOT_FOUND));
     }
 }

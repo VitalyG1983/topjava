@@ -15,7 +15,7 @@ import java.util.List;
 
 public abstract class AbstractJdbcMealRepository<DT> implements MealRepository {
 
-    static private final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
+    private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
 
     private final JdbcTemplate jdbcTemplate;
 

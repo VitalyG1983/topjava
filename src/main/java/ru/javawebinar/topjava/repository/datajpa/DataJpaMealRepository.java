@@ -19,14 +19,13 @@ public class DataJpaMealRepository implements MealRepository {
         this.crudUserRepository = crudUserRepository;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     @Override
     public Meal save(Meal meal, int userId) {
-
-        meal.setUser(crudUserRepository.getById(userId));
         if (!meal.isNew() && (get(meal.id(), userId) == null)) {
             return null;
         }
+        meal.setUser(crudUserRepository.getById(userId));
         return crudMealRepository.save(meal);
     }
 
@@ -35,13 +34,12 @@ public class DataJpaMealRepository implements MealRepository {
         return crudMealRepository.delete(id, userId) != 0;
     }
 
-    //   old without User
     @Override
     public Meal get(int id, int userId) {
-        return crudMealRepository.findById(id).filter(meal->meal.getUser().getId()==userId).orElse(null);
+        return crudMealRepository.findById(id).filter(meal -> meal.getUser().getId() == userId).orElse(null);
     }
 
-    //   new -  with User
+    @Override
     public Meal getWithUser(int id, int userId) {
         return crudMealRepository.getWithUser(id, userId);
     }

@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 
 
 @Repository
-@Profile(Profiles.JDBC + " & " + Profiles.HSQL_DB)
 public class HsqldbJdbcMealRepository extends AbstractJdbcMealRepository<Timestamp> {
 
     @Autowired

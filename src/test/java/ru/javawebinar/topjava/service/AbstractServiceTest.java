@@ -11,8 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.ActiveDbProfileResolver;
 import ru.javawebinar.topjava.util.TimeWatcher;
 
-import static ru.javawebinar.topjava.util.TimeWatcher.log;
-import static ru.javawebinar.topjava.util.TimeWatcher.results;
+import static ru.javawebinar.topjava.util.TimeWatcher.*;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -28,12 +27,7 @@ public abstract class AbstractServiceTest {
     public final TimeWatcher timeWatcher = new TimeWatcher();
 
     @AfterClass
-    public static void printResult() {
-        log.info("\n---------------------------------" +
-                "\nTest                 Duration, ms" +
-                "\n---------------------------------" +
-                results +
-                "\n---------------------------------");
-        results.setLength(0);
+    public static void afterClass() {
+        printResult();
     }
 }
