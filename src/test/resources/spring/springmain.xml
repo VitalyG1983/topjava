@@ -3,12 +3,5 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="ru.javawebinar.topjava.**.repository.inmemory"/>
-    <bean class="ru.javawebinar.topjava.web.user.AdminRestController"/>
-
-  <!--  <bean id="mealRestController" class="ru.javawebinar.topjava.web.meal.MealRestController">
-            <constructor-arg name="service" ref="mealService"/>
-    </bean>
-    <bean id="mealService" class="ru.javawebinar.topjava.service.MealService">
-    </bean>-->
+    <context:component-scan base-package="ru.javawebinar.**.web.meal"/>
 </beans>
