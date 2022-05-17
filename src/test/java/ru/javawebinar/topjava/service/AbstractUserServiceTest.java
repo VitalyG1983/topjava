@@ -31,23 +31,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     protected RepositoryUtil repositoryUtil;
 
-    /*   @Autowired
-    @ConditionalOnClass
-    protected RepositoryUtil repositoryUtil;*/
-
-   /* @Autowired
-    // @Bean(name = "repositoryUtil")
-    @Conditional(ProfileCondition.class)
-    public void setJpaUtil(RepositoryUtil repositoryUtil) {
-        this.repositoryUtil = repositoryUtil;
-    }*/
- /*   @BeforeClass
-    @Autowired
-    @Conditional(ProfileCondition.class)
-    public  void setJpaUtil(RepositoryUtil repositoryUtil) {
-        AbstractUserServiceTest.repositoryUtil = repositoryUtil;
-    }*/
-
     @Before
     public void setup() {
         if (repositoryUtil.getClass() == JpaRepositoryUtil.class) {
