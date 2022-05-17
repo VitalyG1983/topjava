@@ -18,7 +18,11 @@
         <jdbc:script encoding="utf-8" location="classpath:db/populateDB.sql"/>
     </jdbc:initialize-database>
 
-    <!-- Choose profile from (hsqldb/ postgres) and (jdbc/ datajpa/ jpa) -->
+
+    <!--  <bean class="ru.javawebinar.topjava.repository.ProfileCondition"/>
+
+
+     <!- Choose profile from (hsqldb/ postgres) and (jdbc/ datajpa/ jpa) -->
 
     <beans profile="hsqldb">
         <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
@@ -58,6 +62,9 @@
     </beans>
 
     <beans profile="jdbc">
+
+    <!--    <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.jdbc.JdbcUserRepository"/>-->
+
         <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
         <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
             <constructor-arg ref="dataSource"/>
@@ -66,6 +73,8 @@
         <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
             <constructor-arg ref="jdbcTemplate"/>
         </bean>
+
+        <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.JdbcRepositoryUtil"/>
     </beans>
 
     <beans profile="jpa,datajpa">
@@ -107,7 +116,8 @@
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
               p:entityManagerFactory-ref="entityManagerFactory"/>
 
-        <bean class="ru.javawebinar.topjava.repository.JpaUtil"/>
+     <!--   <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.RepositoryUtiloryUtil"/>-->
+        <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.JpaRepositoryUtil"/>
     </beans>
 
     <beans profile="jpa">

@@ -8,13 +8,14 @@ import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.repository.JpaRepositoryUtil;
+import ru.javawebinar.topjava.repository.RepositoryUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import ru.javawebinar.topjava.repository.JpaUtil;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
@@ -28,12 +29,31 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     private CacheManager cacheManager;
 
     @Autowired
-    protected JpaUtil jpaUtil;
+    protected RepositoryUtil repositoryUtil;
+
+    /*   @Autowired
+    @ConditionalOnClass
+    protected RepositoryUtil repositoryUtil;*/
+
+   /* @Autowired
+    // @Bean(name = "repositoryUtil")
+    @Conditional(ProfileCondition.class)
+    public void setJpaUtil(RepositoryUtil repositoryUtil) {
+        this.repositoryUtil = repositoryUtil;
+    }*/
+ /*   @BeforeClass
+    @Autowired
+    @Conditional(ProfileCondition.class)
+    public  void setJpaUtil(RepositoryUtil repositoryUtil) {
+        AbstractUserServiceTest.repositoryUtil = repositoryUtil;
+    }*/
 
     @Before
     public void setup() {
-        cacheManager.getCache("users").clear();
-        jpaUtil.clear2ndLevelHibernateCache();
+        if (repositoryUtil.getClass() == JpaRepositoryUtil.class) {
+            cacheManager.getCache("users").clear();
+            ((JpaRepositoryUtil) repositoryUtil).clear2ndLevelHibernateCache();
+        }
     }
 
     @Test

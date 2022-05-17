@@ -1,15 +1,9 @@
 package ru.javawebinar.topjava.repository;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+public abstract class RepositoryUtil {
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-public class JpaUtil {
-
-    @PersistenceContext
-    private EntityManager em;
+/*    @PersistenceContext
+    protected static EntityManager em;
 
     public void clear2ndLevelHibernateCache() {
         Session s = (Session) em.getDelegate();
@@ -17,5 +11,6 @@ public class JpaUtil {
 //        sf.getCache().evictEntityData(User.class, AbstractBaseEntity.START_SEQ);
 //        sf.getCache().evictEntityData(User.class);
         sf.getCache().evictAllRegions();
-    }
+    }*/
 }
+
