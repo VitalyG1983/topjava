@@ -1,18 +1,21 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
+<jsp:include page="fragments/headTag.jsp"/>
 <head>
-    <title>Meal</title>
-    <link rel="stylesheet" href="resources/css/style.css">
+    <title><spring:message code="meal.title"/></title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css">
 </head>
+<jsp:include page="fragments/bodyHeader.jsp"/>
 <body>
 <section>
-    <h3><a href="index.html">Home</a></h3>
+    <h3><a href="/topjava"><spring:message code="app.home"/></a></h3>
     <hr>
     <h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <form method="post" action="meals">
+    <form method="post" action="${pageContext.request.contextPath}/meals">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
             <dt>DateTime:</dt>
@@ -30,5 +33,6 @@
         <button onclick="window.history.back()" type="button">Cancel</button>
     </form>
 </section>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

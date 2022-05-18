@@ -37,14 +37,13 @@ public class JspMealController {
     @GetMapping
     public String getMeals(Model model) {
         log.info("getMeals");
-        //int userId = Integer.parseInt(request.getParameter("userId"));
         model.addAttribute("meals", MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
         return "meals";
     }
 
-    @GetMapping(params = {"action"})
+    @GetMapping({"/update", "/create"})
     public String getForSave(Model model, @RequestParam(required = false) Integer id) {
-        log.info("getForSave");
+        log.info("getForSave started");
         final Meal meal = id == null ?
                 new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
                 service.get(id, SecurityUtil.authUserId());
@@ -52,16 +51,16 @@ public class JspMealController {
         return "mealForm";
     }
 
-    @GetMapping(params = {"id", "action=delete"})
+    @GetMapping(path = "/delete", params = {"id"})
     public String deleteMeal(Integer id) {
-        log.info("deleteMeal");
+        log.info("deleteMeal started");
         service.delete(id, SecurityUtil.authUserId());
-        return "redirect:meals";
+        return "redirect:/meals";
     }
 
-    @GetMapping(params = {"startDate", "endDate", "startTime", "endTime"})
+    @GetMapping("/filter")
     public String filterMeals(Model model, HttpServletRequest request) {
-        log.info("filterMeals");
+        log.info("filterMeals started");
         List<Meal> mealsDateFiltered = service.getBetweenInclusive(parseLocalDate(request.getParameter("startDate")),
                 parseLocalDate(request.getParameter("endDate")), SecurityUtil.authUserId());
         List<MealTo> mealTo = MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(),

@@ -62,9 +62,6 @@
     </beans>
 
     <beans profile="jdbc">
-
-    <!--    <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.jdbc.JdbcUserRepository"/>-->
-
         <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
         <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
             <constructor-arg ref="dataSource"/>
@@ -116,7 +113,7 @@
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
               p:entityManagerFactory-ref="entityManagerFactory"/>
 
-     <!--   <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.RepositoryUtiloryUtil"/>-->
+     <!--   <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.JpaUtil"/>-->
         <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.JpaRepositoryUtil"/>
     </beans>
 
