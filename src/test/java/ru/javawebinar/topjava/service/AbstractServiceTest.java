@@ -48,7 +48,7 @@ public abstract class AbstractServiceTest {
     @Before
     public void init() {
         if (environment != null && Arrays.toString(environment.getActiveProfiles()).contains(JDBC)) {
-            assumeTrue(!testName.getMethodName().equals("createWithException"));
+          //  assumeTrue(!testName.getMethodName().equals("createWithException"));
         }
     }
 
