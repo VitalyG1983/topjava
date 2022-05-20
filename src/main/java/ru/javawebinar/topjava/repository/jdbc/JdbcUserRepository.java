@@ -20,9 +20,13 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.preSave;
+
 @Transactional(readOnly = true)
 @Repository
 public class JdbcUserRepository implements UserRepository {
+    protected static final String INSERT = "INSERT";
+    protected static final String UPDATE = "UPDATE";
 
     private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
 
@@ -49,15 +53,18 @@ public class JdbcUserRepository implements UserRepository {
         List<Role> roles = user.getRoles().stream().toList();
         String sqlRoles = "INSERT INTO user_roles (user_id, role) VALUES (?,?)";
         if (user.isNew()) {
+            preSave(user, INSERT);
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
             saveRoles(sqlRoles, roles, newKey.intValue(), false);
-        } else if (namedParameterJdbcTemplate.update("""
-                   UPDATE users SET name=:name, email=:email, password=:password, 
-                   registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id
-                """, parameterSource) == 0) {
-            return null;
         } else {
+            preSave(user, UPDATE);
+            if (namedParameterJdbcTemplate.update("""
+                       UPDATE users SET name=:name, email=:email, password=:password, 
+                       registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id
+                    """, parameterSource) == 0) {
+                return null;
+            }
             saveRoles(sqlRoles, roles, user.getId(), true);
         }
         return user;
@@ -91,11 +98,11 @@ public class JdbcUserRepository implements UserRepository {
         return userRowMapper.userRolesMap.values().stream().toList();
     }
 
-    private int[] saveRoles(String sql, List<Role> roles, int userId, boolean update) {
+    private void saveRoles(String sql, List<Role> roles, int userId, boolean update) {
         if (update) {
             jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", userId);
         }
-        return jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setInt(1, userId);
