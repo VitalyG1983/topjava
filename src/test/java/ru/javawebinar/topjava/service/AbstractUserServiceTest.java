@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.support.NoOpCacheManager;
-import org.springframework.context.annotation.Bean;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -29,9 +27,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     private CacheManager cacheManager;
 
-    @Bean public CacheManager cacheManager() {
-        return new NoOpCacheManager();
-    }
     @Autowired
     protected RepositoryUtil repositoryUtil;
 
@@ -61,8 +56,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void delete() {
-        service.delete(USER_ID);
-        assertThrows(NotFoundException.class, () -> service.get(USER_ID));
+        service.delete(ADMIN_ID);
+        assertThrows(NotFoundException.class, () -> service.get(ADMIN_ID));
     }
 
     @Test
@@ -98,6 +93,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     public void getAll() {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, guest, user);
+        System.out.println("Select Second getAll()");
+        List<User> allSecond = service.getAll();
     }
 
     @Test
