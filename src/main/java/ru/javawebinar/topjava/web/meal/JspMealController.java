@@ -8,57 +8,50 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.web.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Objects;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
-import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
-import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
 @RequestMapping(value = "/meals")
-public class JspMealController extends AbstractMealController{
+public class JspMealController extends AbstractMealController {
 
     @GetMapping
     public String getAll(Model model) {
-        log.info("getAll meals started");
-        model.addAttribute("meals", MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
+        model.addAttribute("meals", super.getAll());
         return "meals";
     }
 
-    @GetMapping({"/update", "/create"})
-    public String getForSave(Model model, @RequestParam(required = false) Integer id) {
-        log.info("getForSave meal started");
-        final Meal meal = id == null ?
-                new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                service.get(id, SecurityUtil.authUserId());
-        model.addAttribute("meal", meal);
+    @GetMapping("/update")
+    public String update(Model model, @RequestParam(required = false) Integer id) {
+        model.addAttribute("meal", super.get(id));
         return "mealForm";
     }
 
-    @GetMapping(path = "/delete", params = {"id"})
-    public String delete(Integer id) {
-        log.info("delete meal started");
-        service.delete(id, SecurityUtil.authUserId());
+    @GetMapping("/create")
+    public String create(Model model) {
+        log.info("create meal started");
+        model.addAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
+        return "mealForm";
+    }
+
+    @GetMapping("/delete")
+    public String delete(Model model, int id) {
+        super.delete(id);
         return "redirect:/meals";
     }
 
     @GetMapping("/filter")
     public String filter(Model model, HttpServletRequest request) {
         log.info("filter meals started");
-        List<Meal> mealsDateFiltered = service.getBetweenInclusive(parseLocalDate(request.getParameter("startDate")),
-                parseLocalDate(request.getParameter("endDate")), SecurityUtil.authUserId());
-        List<MealTo> mealTo = MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(),
-                parseLocalTime(request.getParameter("startTime")), parseLocalTime(request.getParameter("endTime")));
-        model.addAttribute("meals", mealTo);
+        model.addAttribute("meals", super.getBetween(parseLocalDate(request.getParameter("startDate")),
+                parseLocalTime(request.getParameter("startTime")), parseLocalDate(request.getParameter("endDate")),
+                parseLocalTime(request.getParameter("endTime"))));
         return "meals";
     }
 
@@ -68,17 +61,10 @@ public class JspMealController extends AbstractMealController{
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
-        int userId = SecurityUtil.authUserId();
         if (StringUtils.hasLength(request.getParameter("id"))) {
-            // mealController.update(meal, getId(request));
-            assureIdConsistent(meal, getId(request));
-            log.info("update {} for user {}", meal, userId);
-            service.update(meal, userId);
+            super.update(meal, getId(request));
         } else {
-            // mealController.create(meal);
-            checkNew(meal);
-            log.info("create {} for user {}", meal, userId);
-            service.create(meal, userId);
+            super.create(meal);
         }
         return "redirect:meals";
     }
