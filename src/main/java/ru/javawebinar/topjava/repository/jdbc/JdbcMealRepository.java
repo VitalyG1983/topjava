@@ -15,8 +15,6 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.repository.jdbc.JdbcUserRepository.INSERT;
-import static ru.javawebinar.topjava.repository.jdbc.JdbcUserRepository.UPDATE;
 import static ru.javawebinar.topjava.util.ValidationUtil.preSave;
 
 @Transactional(readOnly = true)
@@ -51,11 +49,11 @@ public class JdbcMealRepository implements MealRepository {
                 .addValue("user_id", userId);
 
         if (meal.isNew()) {
-            preSave(meal, INSERT);
+            preSave(meal);
             Number newId = insertMeal.executeAndReturnKey(map);
             meal.setId(newId.intValue());
         } else {
-            preSave(meal, UPDATE);
+            preSave(meal);
             if (namedParameterJdbcTemplate.update("" +
                     "UPDATE meals " +
                     "   SET description=:description, calories=:calories, date_time=:date_time " +

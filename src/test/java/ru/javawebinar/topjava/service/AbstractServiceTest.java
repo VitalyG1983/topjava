@@ -20,13 +20,12 @@ import ru.javawebinar.topjava.TimingRules;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assume.assumeTrue;
 import static ru.javawebinar.topjava.Profiles.JDBC;
 import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml",  "classpath:spring/noopcach.xml"
+        "classpath:spring/spring-db.xml", "classpath:spring/noopcach.xml"
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
@@ -37,20 +36,10 @@ public abstract class AbstractServiceTest {
     public static ExternalResource summary = TimingRules.SUMMARY;
 
     @Autowired
-    protected Environment environment;
-
-    @Rule
-    public TestName testName = new TestName();
+    private Environment environment;
 
     @Rule
     public Stopwatch stopwatch = TimingRules.STOPWATCH;
-
-    @Before
-    public void init() {
-        if (environment != null && Arrays.toString(environment.getActiveProfiles()).contains(JDBC)) {
-          //  assumeTrue(!testName.getMethodName().equals("createWithException"));
-        }
-    }
 
     //  Check root cause in JUnit: https://github.com/junit-team/junit4/pull/778
     protected <T extends Throwable> void validateRootCause(Class<T> rootExceptionClass, Runnable runnable) {

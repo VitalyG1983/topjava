@@ -25,8 +25,6 @@ import static ru.javawebinar.topjava.util.ValidationUtil.preSave;
 @Transactional(readOnly = true)
 @Repository
 public class JdbcUserRepository implements UserRepository {
-    protected static final String INSERT = "INSERT";
-    protected static final String UPDATE = "UPDATE";
 
     private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
 
@@ -53,12 +51,12 @@ public class JdbcUserRepository implements UserRepository {
         List<Role> roles = user.getRoles().stream().toList();
         String sqlRoles = "INSERT INTO user_roles (user_id, role) VALUES (?,?)";
         if (user.isNew()) {
-            preSave(user, INSERT);
+            preSave(user);
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
             saveRoles(sqlRoles, roles, newKey.intValue(), false);
         } else {
-            preSave(user, UPDATE);
+            preSave(user);
             if (namedParameterJdbcTemplate.update("""
                        UPDATE users SET name=:name, email=:email, password=:password, 
                        registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id

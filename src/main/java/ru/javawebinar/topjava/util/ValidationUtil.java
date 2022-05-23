@@ -7,10 +7,12 @@ import ru.javawebinar.topjava.model.AbstractBaseEntity;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.*;
-import java.util.HashSet;
 import java.util.Set;
 
 public class ValidationUtil {
+    private static final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    private static final Validator validator = validatorFactory.getValidator();
+
     private ValidationUtil() {
     }
 
@@ -56,34 +58,12 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static <T> void preSave(T object, String operation) {
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        Validator validator = validatorFactory.getValidator();
+    public static <T> void preSave(T object) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(object);
 
         if (constraintViolations.size() > 0) {
-            Set<ConstraintViolation<?>> propagatedViolations =
-                    new HashSet<ConstraintViolation<?>>(constraintViolations.size());
-            Set<String> classNames = new HashSet<String>();
-            for (ConstraintViolation<?> violation : constraintViolations) {
-                //LOG.trace(violation);
-                propagatedViolations.add(violation);
-                classNames.add(violation.getLeafBean().getClass().getName());
-            }
-            StringBuilder builder = new StringBuilder();
-            builder.append("Validation failed for classes ");
-            builder.append(classNames);
-            builder.append(" during ");
-            builder.append(operation).append(" operation");
-            builder.append("\nList of constraint violations:[\n");
-            for (ConstraintViolation<?> violation : constraintViolations) {
-                builder.append("\t").append(violation.toString()).append("\n");
-            }
-            builder.append("]");
-
             throw new ConstraintViolationException(
-                    builder.toString(), propagatedViolations
-            );
+                    constraintViolations.toString(), constraintViolations);
         }
     }
 }
