@@ -1,9 +1,13 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -19,6 +23,7 @@ import java.util.Set;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Autowired
@@ -28,12 +33,17 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     private CacheManager cacheManager;
 
     @Autowired
-    protected RepositoryUtil repositoryUtil;
+    //@Lazy
+    protected JpaRepositoryUtil repositoryUtil;
+
+    @Autowired
+    private ApplicationContext appContext;
 
     @Before
     public void setup() {
+        final Object entityManagerFactory = appContext.getBean("entityManagerFactory");
+        cacheManager.getCache("users").clear();
         if (repositoryUtil.getClass() == JpaRepositoryUtil.class) {
-            cacheManager.getCache("users").clear();
             ((JpaRepositoryUtil) repositoryUtil).clear2ndLevelHibernateCache();
         }
     }
@@ -83,14 +93,15 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void update() {
+    public void a1update() {
         User updated = getUpdated();
         service.update(updated);
         USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        USER_MATCHER.assertMatch(service.getAll(), admin, guest, getUpdated());
     }
 
     @Test
-    public void getAll() {
+    public void a2getAll() {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, guest, user);
         System.out.println("Select Second getAll()");
