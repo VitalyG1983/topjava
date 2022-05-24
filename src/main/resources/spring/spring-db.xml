@@ -32,6 +32,7 @@
               p:url="${database.url}"
               p:username="${database.username}"
               p:password="${database.password}"/>
+    <!--    p:connectionProperties="${database.allow_empty_batch}"-->
     </beans>
 
     <beans profile="postgres">
@@ -68,8 +69,6 @@
         <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
             <constructor-arg ref="jdbcTemplate"/>
         </bean>
-
-        <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.JdbcRepositoryUtil"/>
 
         <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
             <property name="dataSource" ref="dataSource"/>
@@ -113,8 +112,7 @@
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
               p:entityManagerFactory-ref="entityManagerFactory"/>
 
-     <!--   <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.JpaUtil"/>-->
-        <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.JpaRepositoryUtil"/>
+        <bean name="jpaUtil" class="ru.javawebinar.topjava.repository.JpaUtil"/>
     </beans>
 
     <beans profile="jpa">

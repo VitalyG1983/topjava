@@ -6,21 +6,21 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.repository.JpaRepositoryUtil;
-import ru.javawebinar.topjava.repository.RepositoryUtil;
+import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertThrows;
+import static ru.javawebinar.topjava.Profiles.JDBC;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -33,18 +33,14 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     private CacheManager cacheManager;
 
     @Autowired
-    //@Lazy
-    protected JpaRepositoryUtil repositoryUtil;
-
-    @Autowired
-    private ApplicationContext appContext;
+    @Lazy
+    protected JpaUtil jpaUtil;
 
     @Before
     public void setup() {
-        final Object entityManagerFactory = appContext.getBean("entityManagerFactory");
         cacheManager.getCache("users").clear();
-        if (repositoryUtil.getClass() == JpaRepositoryUtil.class) {
-            ((JpaRepositoryUtil) repositoryUtil).clear2ndLevelHibernateCache();
+        if (!Arrays.toString(environment.getActiveProfiles()).contains(JDBC)) {
+            jpaUtil.clear2ndLevelHibernateCache();
         }
     }
 
@@ -104,8 +100,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     public void a2getAll() {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, guest, user);
-        System.out.println("Select Second getAll()");
-        List<User> allSecond = service.getAll();
     }
 
     @Test
