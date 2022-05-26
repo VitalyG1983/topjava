@@ -60,10 +60,8 @@ public class ValidationUtil {
 
     public static <T> void preSave(T object) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(object);
-
         if (constraintViolations.size() > 0) {
-            throw new ConstraintViolationException(
-                    constraintViolations.toString(), constraintViolations);
+            throw new ConstraintViolationException(constraintViolations);
         }
     }
 }
