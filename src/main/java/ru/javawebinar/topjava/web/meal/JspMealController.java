@@ -41,8 +41,8 @@ public class JspMealController extends AbstractMealController {
     }
 
     @GetMapping("/delete")
-    public String delete(Integer id) {
-        super.delete(id);
+    public String delete(HttpServletRequest request) {
+        super.delete(getId(request));
         return "redirect:/meals";
     }
 
