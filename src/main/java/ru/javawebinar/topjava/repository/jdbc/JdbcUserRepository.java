@@ -108,31 +108,29 @@ public class JdbcUserRepository implements UserRepository {
 
         @Override
         public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
-            List<User> results = new ArrayList<>();
-            Collection<Role> roles = new ArrayList<>();
+            //Collection<Role> roles = new ArrayList<>();
+            Map<Integer, User> userMap = new LinkedHashMap<>();
             int rowNum = 1;
-            int oldUserId = -1;
             while (rs.next()) {
                 int userId = rs.getInt("id");
-                if (oldUserId != userId) {
-                    roles.clear();
-                    User user = new User(ROW_MAPPER.mapRow(rs, rowNum));
-                    int index = Collections.binarySearch(results, user, USER_NAME_COMPARATOR);
-                    index = index >= 0 ? -1 : ~index;
-                    if (index >= 0) {
-                        results.add(index, user);
+                int finalRowNum = rowNum;
+                User user = userMap.computeIfAbsent(userId, id -> {
+                    //roles.clear();
+                    try {
+                        return new User(ROW_MAPPER.mapRow(rs, finalRowNum));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-
-                }
+                    return null;
+                });
                 final String role = rs.getString("role");
-                if (role != null) {
-                    roles.add(Role.valueOf(role));
-                    results.get(results.size() - 1).setRoles(roles);
+                if (role != null && user != null) {
+                   // roles.add(Role.valueOf(role));
+                    user.getRoles().add(Role.valueOf(role));
                 }
-                oldUserId = userId;
                 rowNum++;
             }
-            return results;
+            return new ArrayList<>(userMap.values());
         }
     }
 }
