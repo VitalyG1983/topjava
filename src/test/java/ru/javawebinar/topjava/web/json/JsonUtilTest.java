@@ -4,11 +4,10 @@ import org.junit.jupiter.api.Test;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.MealTestData.MEAL_MATCHER;
-import static ru.javawebinar.topjava.MealTestData.adminMeal1;
-import static ru.javawebinar.topjava.MealTestData.meals;
+import static ru.javawebinar.topjava.MealTestData.*;
 
 class JsonUtilTest {
 
@@ -22,6 +21,8 @@ class JsonUtilTest {
 
     @Test
     void readWriteValues() {
+        LocalDateTime ldt= LocalDateTime.now();
+
         String json = JsonUtil.writeValue(meals);
         System.out.println(json);
         List<Meal> meals = JsonUtil.readValues(json, Meal.class);
