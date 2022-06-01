@@ -58,7 +58,7 @@ public class MealRestController extends AbstractMealController {
 
     @GetMapping("/filtertwo")
     public List<MealTo> twoParamGetBetween(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         LocalDate startDate = start.toLocalDate();
         LocalDate endDate = end.toLocalDate();
         LocalTime startTime = start.toLocalTime();
@@ -68,13 +68,13 @@ public class MealRestController extends AbstractMealController {
 
     @GetMapping("/filterfour")
     public List<MealTo> fourParamGetBetween(@RequestParam @Nullable //@DateTimeFormat
-                                               LocalDate startDate,
-                                   @RequestParam @Nullable //@DateTimeFormat
-                                           LocalDate endDate,
-                                   @RequestParam @Nullable //@DateTimeFormat
-                                               LocalTime startTime,
-                                   @RequestParam @Nullable //@DateTimeFormat
-                                               LocalTime endTime) {
+                                                    LocalDate startDate,
+                                            @RequestParam @Nullable //@DateTimeFormat
+                                                    LocalDate endDate,
+                                            @RequestParam @Nullable //@DateTimeFormat
+                                                    LocalTime startTime,
+                                            @RequestParam @Nullable //@DateTimeFormat
+                                                    LocalTime endTime) {
         return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }
