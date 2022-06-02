@@ -24,11 +24,6 @@ class JsonUtilTest {
         System.out.println(json);
         User user = JsonUtil.readValue(json, User.class);
         USER_MATCHER.assertMatch(user, adminWithMeals);
-
-        json = JsonUtil.writeValue(adminMeal1);
-        System.out.println(json);
-        meal = JsonUtil.readValue(json, Meal.class);
-        MEAL_MATCHER_WITH_USER.assertMatch(meal, adminMeal1);
     }
 
     @Test
@@ -37,10 +32,5 @@ class JsonUtilTest {
         System.out.println(json);
         List<Meal> meals = JsonUtil.readValues(json, Meal.class);
         MEAL_MATCHER.assertMatch(meals, MealTestData.meals);
-
-        json = JsonUtil.writeValue(List.of(adminMeal2, adminMeal1));
-        System.out.println(json);
-        meals = JsonUtil.readValues(json, Meal.class);
-        MEAL_MATCHER_WITH_USER.assertMatch(meals, List.of(adminMeal2, adminMeal1));
     }
 }

@@ -3,6 +3,8 @@ package ru.javawebinar.topjava;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +15,8 @@ import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 public class UserTestData {
     public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "meals");
     public static final MatcherFactory.Matcher<User> USER_MATCHER_WITH_MEALS = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "meals.user.registered");
+
+    public static File file = new File("src/main/webapp/resources/css/style.css");
 
     public static final int USER_ID = START_SEQ;
     public static final int ADMIN_ID = START_SEQ + 1;
@@ -28,6 +32,11 @@ public class UserTestData {
     static {
         adminWithMeals.setMeals(List.of(adminMeal2, adminMeal1));
         userWithMeals.setMeals(meals);
+        try {
+            Object o = file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static User getNew() {

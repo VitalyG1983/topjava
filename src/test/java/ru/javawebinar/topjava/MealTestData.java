@@ -3,7 +3,6 @@ package ru.javawebinar.topjava;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
@@ -13,11 +12,11 @@ import static java.time.LocalDateTime.of;
 import static ru.javawebinar.topjava.UserTestData.adminWithMeals;
 import static ru.javawebinar.topjava.UserTestData.userWithMeals;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
+import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
 public class MealTestData {
     public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Meal.class, "user");
-    public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER_WITH_USER = MatcherFactory.usingIgnoringFieldsComparator(Meal.class, "user.registered", "user.meals");
-    public static final MatcherFactory.Matcher<MealTo> MEAL_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(MealTo.class, "user");
+    public static final MatcherFactory.Matcher<MealTo> MEAL_TO_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(MealTo.class);
 
     public static final int NOT_FOUND = 10;
     public static final int MEAL1_ID = START_SEQ + 3;
@@ -35,11 +34,10 @@ public class MealTestData {
 
     public static final List<Meal> meals = List.of(meal7, meal6, meal5, meal4, meal3, meal2, meal1);
 
-    public static final List<MealTo> mealsTo = MealsUtil.getTos(meals, SecurityUtil.authUserCaloriesPerDay());
+    public static final List<MealTo> mealsTo = MealsUtil.getTos(meals, DEFAULT_CALORIES_PER_DAY);
 
-    public static final List<MealTo> mealsToFiltered = MealsUtil.getTos(List.of(meal2, meal1), SecurityUtil.authUserCaloriesPerDay());
+    public static final List<MealTo> mealsToFiltered = mealsTo.stream().filter(meal -> meal.getId() == MEAL1_ID + 2 || meal.getId() == MEAL1_ID + 6).toList();
 
-    public static final List<MealTo> allMealsToFiltered = MealsUtil.getTos(meals, SecurityUtil.authUserCaloriesPerDay());
 
     static {
         adminMeal1.setUser(adminWithMeals);
