@@ -29,6 +29,16 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void getWithMeals() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "/with-meals?id=" + USER_ID))
+                .andExpect(status().isOk())
+                .andDo(print())
+                // https://jira.spring.io/browse/SPR-14472
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(USER_MATCHER_WITH_MEALS.contentJson(userWithMeals));
+    }
+
+    @Test
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andExpect(status().isNoContent());

@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestController extends AbstractUserController {
-
     static final String REST_URL = "/rest/admin/users";
 
     @Override
@@ -55,5 +54,10 @@ public class AdminRestController extends AbstractUserController {
     @GetMapping("/by-email")
     public User getByMail(@RequestParam String email) {
         return super.getByMail(email);
+    }
+
+    @GetMapping("/with-meals")
+    public User getWithMeals(@RequestParam int id) {
+        return super.getWithMeals(id);
     }
 }

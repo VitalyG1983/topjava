@@ -44,6 +44,16 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void getWithMeals() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "/with-meals?id=" + ADMIN_ID))
+                .andExpect(status().isOk())
+                .andDo(print())
+                // https://jira.spring.io/browse/SPR-14472
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(USER_MATCHER_WITH_MEALS.contentJson(adminWithMeals));
+    }
+
+    @Test
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + USER_ID))
                 .andDo(print())

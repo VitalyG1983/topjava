@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
@@ -23,6 +25,7 @@ import java.time.LocalTime;
 //                "m.description=:desc where m.id=:id and m.user.id=:userId")
 })
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
 public class Meal extends AbstractBaseEntity {
     public static final String ALL_SORTED = "Meal.getAll";
@@ -45,6 +48,7 @@ public class Meal extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    //@JsonBackReference
 //    @NotNull
     private User user;
 
