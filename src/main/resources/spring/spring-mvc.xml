@@ -29,7 +29,6 @@
             <set>
                 <bean class="ru.javawebinar.topjava.util.LocalTimeFormatter"/>
                 <bean class="ru.javawebinar.topjava.util.LocalDateFormatter"/>
-                <!--<bean class="ru.javawebinar.topjava.util.DateFormatAnnotationFormatterFactory"/>-->
             </set>
         </property>
     </bean>
