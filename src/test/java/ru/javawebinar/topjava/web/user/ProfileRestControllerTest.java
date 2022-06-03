@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.web.user;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -29,6 +30,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @EnabledIf(value = "ru.javawebinar.topjava.web.AbstractControllerTest#isDataJpa", disabledReason = "Supported DataJPA only")
     void getWithMeals() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "/with-meals"))
                 .andExpect(status().isOk())
