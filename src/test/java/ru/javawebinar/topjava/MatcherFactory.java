@@ -30,11 +30,6 @@ public class MatcherFactory {
             this.fieldsToIgnore = fieldsToIgnore;
         }
 
-        public static <TO> void assertMatchWithOwnObjectEquals(MvcResult result, Iterable<TO> expected) throws UnsupportedEncodingException {
-            final Class<?> aClass = expected.iterator().hasNext() ? expected.iterator().next().getClass() : Object.class;
-            assertThat(JsonUtil.readValues(getContent(result), aClass)).isEqualTo(expected);
-        }
-
         public void assertMatch(T actual, T expected) {
             assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(expected);
         }

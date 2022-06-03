@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javawebinar.topjava.MatcherFactory.Matcher.assertMatchWithOwnObjectEquals;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
@@ -76,8 +75,8 @@ class MealRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_MEAL_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                //.andExpect(MEAL_TO_MATCHER.contentJson(mealsTo));
-                .andExpect(result -> assertMatchWithOwnObjectEquals(result, mealsTo));
+                .andExpect(MEAL_TO_MATCHER.contentJson(mealsTo));
+
     }
 
     @Test
@@ -85,8 +84,8 @@ class MealRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_MEAL_URL + "filter?startDate=2020-01-30&endDate=2020-01-31&startTime=19:00&endTime=21:00"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                //.andExpect(MEAL_TO_MATCHER.contentJson(mealsToFiltered));
-                .andExpect(result -> assertMatchWithOwnObjectEquals(result, mealsToFiltered));
+                .andExpect(MEAL_TO_MATCHER.contentJson(mealsToFiltered));
+
     }
 
     @Test
@@ -94,7 +93,6 @@ class MealRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_MEAL_URL + "filter?startDate=&endTime="))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                //.andExpect(MEAL_TO_MATCHER.contentJson(mealsTo));
-                .andExpect(result -> assertMatchWithOwnObjectEquals(result, mealsTo));
+                .andExpect(MEAL_TO_MATCHER.contentJson(mealsTo));
     }
 }
