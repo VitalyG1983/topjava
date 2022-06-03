@@ -9,10 +9,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static java.time.LocalDateTime.of;
-import static ru.javawebinar.topjava.UserTestData.adminWithMeals;
-import static ru.javawebinar.topjava.UserTestData.userWithMeals;
+import static ru.javawebinar.topjava.UserTestData.user;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
-import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
 public class MealTestData {
     public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Meal.class, "user");
@@ -34,16 +32,9 @@ public class MealTestData {
 
     public static final List<Meal> meals = List.of(meal7, meal6, meal5, meal4, meal3, meal2, meal1);
 
-    public static final List<MealTo> mealsTo = MealsUtil.getTos(meals, DEFAULT_CALORIES_PER_DAY);
+    public static final List<MealTo> mealsTo = MealsUtil.getTos(meals, user.getCaloriesPerDay());
 
-    public static final List<MealTo> mealsToFiltered = mealsTo.stream().filter(meal -> meal.getId() == MEAL1_ID + 2 || meal.getId() == MEAL1_ID + 6).toList();
-
-
-    static {
-        adminMeal1.setUser(adminWithMeals);
-        adminMeal2.setUser(adminWithMeals);
-        meals.forEach(meal -> meal.setUser(userWithMeals));
-    }
+    public static final List<MealTo> mealsToFiltered = List.of(mealsTo.get(0), mealsTo.get(4));
 
     public static Meal getNew() {
         return new Meal(null, of(2020, Month.FEBRUARY, 1, 18, 0), "Созданный ужин", 300);

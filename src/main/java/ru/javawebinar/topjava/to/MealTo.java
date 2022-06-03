@@ -51,14 +51,15 @@ public class MealTo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MealTo)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         MealTo mealTo = (MealTo) o;
-        return getCalories() == mealTo.getCalories() && isExcess() == mealTo.isExcess() && getId().equals(mealTo.getId()) && getDateTime().equals(mealTo.getDateTime()) && getDescription().equals(mealTo.getDescription());
+        return calories == mealTo.calories && excess == mealTo.excess && Objects.equals(id, mealTo.id)
+                && Objects.equals(dateTime, mealTo.dateTime) && Objects.equals(description, mealTo.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDateTime(), getDescription(), getCalories(), isExcess());
+        return Objects.hash(id, dateTime, description, calories, excess);
     }
 
     @Override

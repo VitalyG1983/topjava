@@ -23,13 +23,9 @@ createWithLocation():
 
 `curl -X POST -H 'Content-Type: application/json' -d '{"id":null, "dateTime":"2020-02-01T18:00", "description":"Созданный ужин", "calories":"300"}' http://localhost:8080/topjava/rest/meals`
 
-twoParamGetBetween():
-
-`curl 'http://localhost:8080/topjava/rest/meals/filtertwo?start=2020-01-30T09:00&end=2020-01-30T15:00'`
-
 fourParamGetBetween():
 
-`curl 'http://localhost:8080/topjava/rest/meals/filterfour??startDate=2020-01-30&endDate=2020-01-30&startTime=09:00&endTime=15:00'`
+`curl 'http://localhost:8080/topjava/rest/meals/filter?startDate=2020-01-30&endDate=2020-01-31&startTime=19:00&endTime=21:00'`
 
 Java Enterprise Online Project 
 ===============================

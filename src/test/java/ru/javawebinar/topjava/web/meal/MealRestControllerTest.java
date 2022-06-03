@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.javawebinar.topjava.MatcherFactory.Matcher.assertMatchWithOwnObjectEquals;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
@@ -75,22 +76,25 @@ class MealRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_MEAL_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_TO_MATCHER.contentJson(mealsTo));
+                //.andExpect(MEAL_TO_MATCHER.contentJson(mealsTo));
+                .andExpect(result -> assertMatchWithOwnObjectEquals(result, mealsTo));
     }
 
     @Test
-    void GetBetween() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_MEAL_URL+"filter?startDate=2020-01-30&endDate=2020-01-31&startTime=19:00&endTime=21:00"))
+    void getBetween() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_MEAL_URL + "filter?startDate=2020-01-30&endDate=2020-01-31&startTime=19:00&endTime=21:00"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_TO_MATCHER.contentJson(mealsToFiltered));
+                //.andExpect(MEAL_TO_MATCHER.contentJson(mealsToFiltered));
+                .andExpect(result -> assertMatchWithOwnObjectEquals(result, mealsToFiltered));
     }
 
     @Test
-    void NullGetBetween() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_MEAL_URL+"filter?startDate=&endTime="))
+    void nullGetBetween() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_MEAL_URL + "filter?startDate=&endTime="))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_TO_MATCHER.contentJson(mealsTo));
+                //.andExpect(MEAL_TO_MATCHER.contentJson(mealsTo));
+                .andExpect(result -> assertMatchWithOwnObjectEquals(result, mealsTo));
     }
 }
