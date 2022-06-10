@@ -13,37 +13,51 @@
     <div class="container">
         <h3 class="text-center"><spring:message code="meal.title"/></h3>
 
-        <form id="filter">
-            <div class="form-group row">
-                <label for="startDate" class="col-sm-2 col-form-label"><spring:message code="meal.startDate"/>:</label>
-                <div class="col-sm-10">
-                    <input type="date" class="form-control" id="startDate" style="width: 150px">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="endDate" class="col-sm-2 col-form-label"><spring:message code="meal.endDate"/>:</label>
-                <div class="col-sm-10">
-                    <input type="date" class="form-control" id="endDate" style="width: 150px">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="startTime" class="col-sm-2 col-form-label"><spring:message code="meal.startTime"/>:</label>
-                <div class="col-sm-10">
-                    <input type="time" class="form-control" id="startTime" style="width: 100px">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="endTime" class="col-sm-2 col-form-label"><spring:message code="meal.endTime"/>:</label>
-                <div class="col-sm-10">
-                    <input type="time" class="form-control" id="endTime" style="width: 100px">
-                </div>
-            </div>
-            <button class="btn btn-primary" id="mealsFilter" onclick="mealsFilter()">
-                <spring:message code="meal.filter"/>
-            </button>
-        </form>
+        <div class="card border-dark" style="min-width: auto">
+            <div class="card border-dark">
+                <form id="filterform">
+                    <div class="form-group row">
+                        <label for="startDate" class="col-sm-2 col-form-label"><spring:message
+                                code="meal.startDate"/>:</label>
+                        <div class="col-sm-10">
+                            <input type="date" class="form-control" id="startDate" style="width: 150px">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="endDate" class="col-sm-2 col-form-label"><spring:message
+                                code="meal.endDate"/>:</label>
+                        <div class="col-sm-10">
+                            <input type="date" class="form-control" id="endDate" style="width: 150px">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="startTime" class="col-sm-2 col-form-label"><spring:message
+                                code="meal.startTime"/>:</label>
+                        <div class="col-sm-10">
+                            <input type="time" class="form-control" id="startTime" style="width: 100px">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="endTime" class="col-sm-2 col-form-label"><spring:message
+                                code="meal.endTime"/>:</label>
+                        <div class="col-sm-10">
+                            <input type="time" class="form-control" id="endTime" style="width: 100px">
+                        </div>
+                    </div>
 
-         <button class="btn btn-primary" onclick="add()">
+                </form>
+            </div>
+            <div class="card-footer text-right">
+                <button type="button" class="btn btn-primary" onclick="clearFilter()">
+                    <spring:message code="common.cancel"/>
+                </button>
+                <button type="button" class="btn btn-primary" onclick="mealsFilter($('#filterform'))">
+                    <spring:message code="meal.filter"/>
+                </button>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="add()">
             <span class="fa fa-plus"></span>
             <spring:message code="meal.add"/>
         </button>

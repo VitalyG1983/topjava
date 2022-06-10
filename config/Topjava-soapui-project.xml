@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="Topjava" resourceRoot="" soapui-version="5.6.0" abortOnError="false" runType="SEQUENTIAL" id="b6a174fe-9cda-4410-af25-bdf04e1fed39"
-                    xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-project activeEnvironment="Default" name="Topjava" resourceRoot="" soapui-version="5.7.0" abortOnError="false" runType="SEQUENTIAL" id="b6a174fe-9cda-4410-af25-bdf04e1fed39" xmlns:con="http://eviware.com/soapui/config">
     <con:settings/>
-    <con:interface xsi:type="con:RestService" wadlVersion="http://wadl.dev.java.net/2009/02" name="http://localhost:8080" type="rest" id="eebe6f3c-c045-444a-ae8f-c0f4bbb345b5"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:interface xsi:type="con:RestService" wadlVersion="http://wadl.dev.java.net/2009/02" name="http://localhost:8080" type="rest" id="eebe6f3c-c045-444a-ae8f-c0f4bbb345b5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <con:settings/>
         <con:definitionCache/>
         <con:endpoints>
@@ -573,7 +571,7 @@
                     <con:params/>
                     <con:element>Response</con:element>
                 </con:representation>
-                <con:request name="filter" id="56215be5-de45-498c-89ca-dc47512a12dd" mediaType="application/json">
+                <con:representation type="FAULT"><con:mediaType>text/html;charset=utf-8</con:mediaType><con:status>401</con:status><con:params/><con:element>html</con:element></con:representation><con:request name="filter" id="56215be5-de45-498c-89ca-dc47512a12dd" mediaType="application/json">
                     <con:settings>
                         <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
                     </con:settings>
@@ -581,7 +579,7 @@
                     <con:request/>
                     <con:originalUri>http://localhost/topjava/rest/profile/meals/filter</con:originalUri>
                     <con:credentials>
-                        <con:authType>No Authorization</con:authType>
+                        <con:username>user@yandex.ru</con:username><con:password>password</con:password><con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
                     </con:credentials>
                     <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
                     <con:jmsPropertyConfig/>
@@ -600,7 +598,74 @@
                 </con:request>
             </con:method>
         </con:resource>
-    </con:interface>
+    <con:resource name="filterUI" path="/topjava/profile/meals/filter" id="10b61969-bed1-4ed6-84ed-9fc3f196b8a0">
+            <con:settings/>
+            <con:parameters>
+                <con:parameter>
+                    <con:name>startDate</con:name>
+                    <con:value/>
+                    <con:style>QUERY</con:style>
+                    <con:default/>
+                    <con:description xsi:nil="true"/>
+                </con:parameter>
+                <con:parameter>
+                    <con:name>startTime</con:name>
+                    <con:value/>
+                    <con:style>QUERY</con:style>
+                    <con:default/>
+                    <con:description xsi:nil="true"/>
+                </con:parameter>
+                <con:parameter>
+                    <con:name>endDate</con:name>
+                    <con:value/>
+                    <con:style>QUERY</con:style>
+                    <con:default/>
+                    <con:description xsi:nil="true"/>
+                </con:parameter>
+                <con:parameter>
+                    <con:name>endTime</con:name>
+                    <con:value/>
+                    <con:style>QUERY</con:style>
+                    <con:default/>
+                    <con:description xsi:nil="true"/>
+                </con:parameter>
+            </con:parameters>
+            <con:method name="" id="bb23aa6b-31db-4ebb-834f-bb11ba51bee6" method="GET">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="RESPONSE">
+                    <con:mediaType>application/json;charset=UTF-8</con:mediaType>
+                    <con:status>200</con:status>
+                    <con:params/>
+                    <con:element>Response</con:element>
+                </con:representation>
+                <con:representation type="FAULT"><con:mediaType>text/html;charset=utf-8</con:mediaType><con:status>401</con:status><con:params/><con:element>html</con:element></con:representation><con:request name="filter" id="56215be5-de45-498c-89ca-dc47512a12dd" mediaType="application/json">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                    </con:settings>
+                    <con:endpoint>http://localhost:8080</con:endpoint>
+                    <con:request/>
+                    <con:originalUri>http://localhost/topjava/rest/profile/meals/filter</con:originalUri>
+                    <con:credentials>
+                        <con:username>user@yandex.ru</con:username><con:password>password</con:password><con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters>
+                        <con:entry key="endDate" value="2020-01-31"/>
+                        <con:entry key="startTime" value="07:00"/>
+                        <con:entry key="endTime" value="11:00"/>
+                        <con:entry key="startDate" value="2020-01-30"/>
+                    </con:parameters>
+                    <con:parameterOrder>
+                        <con:entry>startDate</con:entry>
+                        <con:entry>startTime</con:entry>
+                        <con:entry>endDate</con:entry>
+                        <con:entry>endTime</con:entry>
+                    </con:parameterOrder>
+                </con:request>
+            </con:method>
+        </con:resource></con:interface>
     <con:properties/>
     <con:wssContainer/>
     <con:oAuth2ProfileContainer/>
