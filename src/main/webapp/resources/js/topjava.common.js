@@ -50,19 +50,6 @@ function save() {
     });
 }
 
-/*function mealsFilter(filterform) {
-    $.get(ctx.ajaxUrl + "filter", {
-            'startDate': filterform.prop('startDate').value,
-            'endDate': filterform.prop('endDate').value,
-            'startTime': filterform.prop('startTime').value,
-            'endTime': filterform.prop('endTime').value
-        },
-        function (data) {
-            ctx.datatableApi.clear().rows.add(data).draw();
-             successNoty("Filtered");
-        });
-}*/
-
 let failedNote;
 
 function closeNoty() {
