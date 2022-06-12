@@ -8,7 +8,6 @@ function makeEditable(datatableApi) {
             deleteRow($(this).closest('tr').attr("id"));
         }
     });
-
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
     });
@@ -41,6 +40,18 @@ function updateTable() {
 function save() {
     $.ajax({
         type: "POST",
+        url: ctx.ajaxUrl,
+        data: form.serialize()
+    }).done(function () {
+        $("#editRow").modal("hide");
+        updateTable();
+        successNoty("Saved");
+    });
+}
+
+function put() {
+    $.ajax({
+        type: "PUT",
         url: ctx.ajaxUrl,
         data: form.serialize()
     }).done(function () {
