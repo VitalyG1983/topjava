@@ -21,9 +21,4 @@
     <script src="webjars/datatables/1.11.4/js/jquery.dataTables.min.js" defer></script>
     <script src="webjars/datatables/1.11.4/js/dataTables.bootstrap4.min.js" defer></script>
     <script src="webjars/noty/3.1.4/lib/noty.min.js" defer></script>
-    <script src="webjars/momentjs/2.29.3/min/moment.min.js" defer></script>
-   <%-- <script src="webjars/datetimepicker/2.5.20-1/build/jquery.datetimepicker.min.js" defer></script>--%>
-  <%--  <script src="webjars/datetimepicker/2.5.20-1/build/jquery.datetimepicker.full.min.js" defer></script>--%>
-    <script src="webjars/datetimepicker/2.5.20-1/build/jquery.datetimepicker.full.js" defer></script>
-  <%--  <script src="webjars/datetimepicker/2.5.20-1/jquery.datetimepicker.js" defer></script>--%>
 </head>

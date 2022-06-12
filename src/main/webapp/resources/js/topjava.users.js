@@ -46,30 +46,10 @@ $(function () {
     );
 });
 
-function postRequest(checkbox) {
-    let tr = $(checkbox).closest('tr');
-    let userId = tr.prop("id");
-    let tdCells = tr.find('td');
-    moment('22-04-2010').format('MM/DD/YYYY');
-    moment.locale()
-   // $.datepicker.parseDate('dd-mm-yy', '22-04-2010');
-   /* $.datepicker.parseDate('22/04/2010','dd/mm/yy');*/
-    /*  let d = $.datepicker.parseDate("dd-MM-yyyy", tdCells.eq(4).text());
-    let dd = $.datepicker.parseDate(tdCells.eq(4).text(),"dd-MMMM-yyyy");*/
-    /*    let format = moment(tdCells.eq(4).text().format('YYYY/MM/DD'));
-        let format = moment(tdCells.eq(4).text().for;*/
-    /*   let values = "";
-       jQuery.each($columns, function (i, item) {
-           values = values + 'td' + (i + 1) + ':' + item.innerHTML + '\n';
-       });
-       console.log(values);*/
+function enable(checkbox) {
+    let userId = $(checkbox).closest('tr').prop("id");
     $.post(ctx.ajaxUrl + userId, {
-            // 'id': userId,
-            'name': tdCells.eq(0).text(),
-            'email': tdCells.eq(1).text(),
-            'password': tdCells.eq(2).text(),
-            'enabled': checkbox.checked,
-            'registered': tdCells.eq(4).text(),
+            'enabled': checkbox.checked
         },
         function () {
             updateTable();

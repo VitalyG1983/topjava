@@ -49,18 +49,6 @@ function save() {
     });
 }
 
-function put() {
-    $.ajax({
-        type: "PUT",
-        url: ctx.ajaxUrl,
-        data: form.serialize()
-    }).done(function () {
-        $("#editRow").modal("hide");
-        updateTable();
-        successNoty("Saved");
-    });
-}
-
 let failedNote;
 
 function closeNoty() {
