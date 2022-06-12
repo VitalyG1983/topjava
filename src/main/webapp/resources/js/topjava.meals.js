@@ -40,7 +40,8 @@ $(function () {
     );
 });
 
-function mealsFilter(filterform) {
+function mealsFilter() {
+    let filterform = $('#filterform');
     $.get(ctx.ajaxUrl + "filter", {
             'startDate': filterform.prop('startDate').value,
             'endDate': filterform.prop('endDate').value,
