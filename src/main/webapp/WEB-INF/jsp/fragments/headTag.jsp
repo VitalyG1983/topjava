@@ -1,7 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title><spring:message code="app.title"/></title>
@@ -13,7 +12,6 @@
     <link rel="stylesheet" href="webjars/datatables/1.11.4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="webjars/noty/3.1.4/lib/noty.css"/>
     <link rel="shortcut icon" href="resources/images/icon-meal.png">
-
 
     <%--http://stackoverflow.com/a/24070373/548473--%>
     <script src="webjars/jquery/3.6.0/jquery.min.js" defer></script>

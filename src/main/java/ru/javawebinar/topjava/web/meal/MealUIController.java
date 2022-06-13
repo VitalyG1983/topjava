@@ -34,7 +34,7 @@ public class MealUIController extends AbstractMealController {
     public void create(@RequestParam LocalDateTime dateTime,
                        @RequestParam String description,
                        @RequestParam int calories) {
-        super.create(new Meal( dateTime, description, calories));
+        super.create(new Meal(dateTime, description, calories));
     }
 
     @GetMapping("/filter")

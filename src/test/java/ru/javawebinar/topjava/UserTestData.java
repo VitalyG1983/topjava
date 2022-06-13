@@ -50,9 +50,15 @@ public class UserTestData {
         return updated;
     }
 
-    public static User getUpdatedEnable() {
+    public static User getUpdatedEnableTrue() {
         User updated = new User(user);
         updated.setEnabled(true);
+        return updated;
+    }
+
+    public static User getUpdatedEnableFalse() {
+        User updated = new User(user);
+        updated.setEnabled(false);
         return updated;
     }
 }

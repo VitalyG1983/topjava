@@ -31,9 +31,9 @@
             </thead>
             <c:forEach items="${requestScope.users}" var="user">
                 <jsp:useBean id="user" type="ru.javawebinar.topjava.model.User"/>
-                <tr id="${user.id}" data-user-enable="${user.enabled}">
-                    <td id="username"><c:out value="${user.name}"/></td>
-                    <td id="mail"><a href="mailto:${user.email}">${user.email}</a></td>
+                <tr id="${user.id}" data-user-enable="${user.enabled}" style="op">
+                    <td><c:out value="${user.name}"/></td>
+                    <td><a href="mailto:${user.email}">${user.email}</a></td>
                     <td>${user.roles}</td>
                     <td><input type="checkbox" onclick="enable(this)" <c:if test="${user.enabled}">checked</c:if>/></td>
                     <td><fmt:formatDate value="${user.registered}" pattern="dd-MMMM-yyyy"/></td>

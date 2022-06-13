@@ -16,6 +16,10 @@ function makeEditable(datatableApi) {
     $.ajaxSetup({cache: false});
 }
 
+function updateDataTable(data) {
+    ctx.datatableApi.clear().rows.add(data).draw();
+}
+
 function add() {
     form.find(":input").val("");
     $("#editRow").modal();
@@ -26,19 +30,9 @@ function deleteRow(id) {
         url: ctx.ajaxUrl + id,
         type: "DELETE"
     }).done(function () {
-        updateTable();
+        ctx.updateTable();
         successNoty("Deleted");
     });
-}
-
-function updateTable() {
-    $.get(ctx.ajaxUrl, function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
-    });
-    if (ctx.ajaxUrl === "profile/meals/") {
-        mealsFilter()
-    }
-
 }
 
 function save() {
@@ -48,7 +42,7 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        ctx.updateTable();
         successNoty("Saved");
     });
 }

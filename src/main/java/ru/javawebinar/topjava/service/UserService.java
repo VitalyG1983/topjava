@@ -58,7 +58,7 @@ public class UserService {
     public void updateEnabled(boolean enabled, int id) {
         User user = get(id);
         user.setEnabled(enabled);
-        update(user);
+        repository.save(user);
     }
 
     public User getWithMeals(int id) {
