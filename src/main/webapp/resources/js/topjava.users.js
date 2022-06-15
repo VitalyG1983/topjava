@@ -4,9 +4,8 @@ const userAjaxUrl = "admin/users/";
 const ctx = {
     ajaxUrl: userAjaxUrl,
     updateTable: function () {
-        $.get(userAjaxUrl, function (data) {
-            updateDataTable(data);
-        })
+        $.get(userAjaxUrl, updateDataTable
+        )
     }
 };
 
@@ -55,17 +54,14 @@ function enable(checkbox) {
     let userId = $(checkbox).closest('tr').prop("id");
     let checked = checkbox.checked;
     $.ajax({
-        type: "POST",
-        url: ctx.ajaxUrl + userId,
-        data: {'enabled': checked}
+        //type: "POST",
+        // url: ctx.ajaxUrl + userId,
+        //data: {'enabled': checked}
+        type: "PATCH",
+        url: ctx.ajaxUrl + userId + "?enabled=" + checked
     }).done(function () {
-        if (!checked) {
-            $(checkbox).closest('tr').css('opacity', "30%");
-            successNoty("Record is deactivated");
-        } else {
-            $(checkbox).closest('tr').css('opacity', "100%");
-            successNoty("Record is activated");
-        }
+        $(checkbox).closest('tr').attr("data-user-enable", checked);
+        successNoty(!checked ? "Record is deactivated" : "Record is activated");
     }).fail(function () {
         $(checkbox).prop('checked', !checked);
     });
