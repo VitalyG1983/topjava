@@ -5,6 +5,9 @@ const ctx = {
     ajaxUrl: userAjaxUrl,
     updateTable: function () {
         $.get(userAjaxUrl, updateTableByData);
+    },
+    detailsFormToSerialize: function () {
+        return $('#detailsForm').serialize()
     }
 }
 

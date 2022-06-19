@@ -49,7 +49,8 @@ function save() {
     $.ajax({
         type: "POST",
         url: ctx.ajaxUrl,
-        data: form.serialize()
+        //data: form.serialize()
+        data: ctx.detailsFormToSerialize()
     }).done(function () {
         $("#editRow").modal("hide");
         ctx.updateTable();
@@ -90,8 +91,16 @@ function renderDeleteBtn(data, type, row) {
 
 function failNoty(jqXHR) {
     closeNoty();
+    let caloriesEmptyFlag;
+    let caloriesEmptyNoty;
+    if (jqXHR.status === 422 && jqXHR.responseJSON.includes("[calories]")
+        && jqXHR.responseJSON.includes("NumberFormatException: For input string: \"\"")) {
+        caloriesEmptyFlag = true;
+        caloriesEmptyNoty = "Поле \'Калории\' не должно быть пустым";
+    }
     failedNote = new Noty({
-        text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + i18n["common.errorStatus"] + ": " + jqXHR.status + (jqXHR.responseJSON ? "<br>" + jqXHR.responseJSON : ""),
+        text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + i18n["common.errorStatus"] + ": " + jqXHR.status + (jqXHR.responseJSON ? "<br>" + (caloriesEmptyFlag ? caloriesEmptyNoty : jqXHR.responseJSON) : ""),
+        //text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + i18n["common.errorStatus"] + ": " + jqXHR.status + (jqXHR.responseJSON ? "<br>" + jqXHR.responseJSON : ""),
         type: "error",
         layout: "bottomRight"
     });
