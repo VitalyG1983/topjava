@@ -11,9 +11,9 @@ const ctx = {
         }).done(updateTableByData);
     },
     detailsFormToSerialize: function () {
-        let dateTime = $('#dateTime');
+      /*  let dateTime = $('#dateTime');
         let dateTimeToSerialize = dateTime.val().replace(" ", "T");
-        dateTime.val(dateTimeToSerialize);
+        dateTime.val(dateTimeToSerialize);*/
         return form.serialize() + "&excess=false"
     },
     parseValue: function (key, value) {
