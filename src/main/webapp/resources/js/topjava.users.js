@@ -7,7 +7,10 @@ const ctx = {
         $.get(userAjaxUrl, updateTableByData);
     },
     detailsFormToSerialize: function () {
-        return $('#detailsForm').serialize()
+        return form.serialize()
+    },
+    parseValue: function (key, value) {
+        return value;
     }
 }
 

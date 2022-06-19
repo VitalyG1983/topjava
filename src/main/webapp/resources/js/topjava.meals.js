@@ -11,7 +11,16 @@ const ctx = {
         }).done(updateTableByData);
     },
     detailsFormToSerialize: function () {
-        return $('#detailsForm').serialize() + "&excess=false"
+        let dateTime = $('#dateTime');
+        let dateTimeToSerialize = dateTime.val().replace(" ", "T");
+        dateTime.val(dateTimeToSerialize);
+        return form.serialize() + "&excess=false"
+    },
+    parseValue: function (key, value) {
+        if (key === 'dateTime') {
+            value = value.replace("T", " ");
+        }
+        return value;
     }
 }
 
@@ -65,4 +74,24 @@ $(function () {
             }
         })
     );
+});
+
+$('#startDate').datetimepicker({
+    timepicker: false,
+    format: 'Y-m-d'
+});
+$('#endDate').datetimepicker({
+    timepicker: false,
+    format: 'Y-m-d'
+});
+$('#startTime').datetimepicker({
+    datepicker: false,
+    format: 'H:i'
+});
+$('#endTime').datetimepicker({
+    datepicker: false,
+    format: 'H:i'
+});
+$('#dateTime').datetimepicker({
+    format: 'Y-m-d H:i'
 });
