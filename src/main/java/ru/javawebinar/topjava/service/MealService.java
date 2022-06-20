@@ -47,13 +47,6 @@ public class MealService {
         repository.save(meal, userId);
     }
 
-    @Transactional
-    public void update(MealTo mealTo, int userId) {
-        Meal meal = get(mealTo.id(), userId);
-        Meal updatedMeal = MealsUtil.updateFromTo(meal, mealTo);
-        repository.save(updatedMeal, userId);   // !! need only for JDBC implementation
-    }
-
     public Meal create(Meal meal, int userId) {
         Assert.notNull(meal, "meal must not be null");
         return repository.save(meal, userId);

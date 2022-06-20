@@ -11,7 +11,7 @@ import ru.javawebinar.topjava.to.UserTo;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.javawebinar.topjava.web.RootController.checkResult;
+import static ru.javawebinar.topjava.util.ValidationUtil.getResult;
 
 @RestController
 @RequestMapping(value = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,8 +39,8 @@ public class AdminUIController extends AbstractUserController {
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> createOrUpdate(@Valid UserTo userTo, BindingResult result) {
-        ResponseEntity<String> responseEntity = checkResult(result);
-        if (responseEntity.hasBody()) {
+        ResponseEntity<String> responseEntity = getResult(result);
+        if (responseEntity != null && responseEntity.hasBody()) {
             return responseEntity;
         }
         if (userTo.isNew()) {
