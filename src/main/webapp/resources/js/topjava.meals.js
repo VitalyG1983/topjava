@@ -11,14 +11,14 @@ const ctx = {
         }).done(updateTableByData);
     },
     detailsFormToSerialize: function () {
-      /*  let dateTime = $('#dateTime');
-        let dateTimeToSerialize = dateTime.val().replace(" ", "T");
-        dateTime.val(dateTimeToSerialize);*/
+        /*  let dateTime = $('#dateTime');
+          let dateTimeToSerialize = dateTime.val().replace(" ", "T");
+          dateTime.val(dateTimeToSerialize);*/
         return form.serialize() + "&excess=false"
     },
     parseValue: function (key, value) {
         if (key === 'dateTime') {
-            value = value.replace("T", " ").substr(0,16);
+            value = value.replace("T", " ").substr(0, 16);
         }
         return value;
     }
@@ -66,11 +66,7 @@ $(function () {
                 ]
             ],
             "createdRow": function (row, data, dataIndex) {
-                if (!data.excess) {
-                    $(row).attr("data-meal-excess", false);
-                } else {
-                    $(row).attr("data-meal-excess", true);
-                }
+                $(row).attr("data-meal-excess", data.excess);
             }
         })
     );
@@ -79,39 +75,47 @@ $(function () {
 $('#startDate').datetimepicker({
     timepicker: false,
     format: 'Y-m-d',
-    onShow:function( ct ){
+    onShow: function (ct) {
         this.setOptions({
-            maxDate:$('#endDate').val()?$('#endDate').val():false
+            maxDate: $('#endDate').val() ? $('#endDate').val() : false
         })
     }
 });
 $('#endDate').datetimepicker({
     timepicker: false,
     format: 'Y-m-d',
-    onShow:function( ct ){
+    onShow: function (ct) {
         this.setOptions({
-            minDate:$('#startDate').val()?$('#startDate').val():false
+            minDate: $('#startDate').val() ? $('#startDate').val() : false
         })
     }
 });
 $('#startTime').datetimepicker({
     datepicker: false,
     format: 'H:i',
-    onShow:function( ct ){
+    onShow: function (ct) {
         this.setOptions({
-            maxTime:$('#endTime').val()?$('#endTime').val():false
+            maxTime: $('#endTime').val() ? $('#endTime').val() : false
         })
     }
 });
 $('#endTime').datetimepicker({
     datepicker: false,
     format: 'H:i',
-    onShow:function( ct ){
+    onShow: function (ct) {
         this.setOptions({
-            minTime:$('#startTime').val()?$('#startTime').val():false
+            minTime: $('#startTime').val() ? $('#startTime').val() : false
         })
     }
 });
 $('#dateTime').datetimepicker({
     format: 'Y-m-d H:i'
 });
+
+function saveRow() {
+    if ($('#calories').val() === "") {
+        successNoty("emptyCalories");
+        return;
+    }
+    save();
+}

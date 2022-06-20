@@ -52,4 +52,20 @@ public class DateTimeFormatters {
             return ldt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
     }
+
+    public static class IntegerFormatter implements Formatter<Integer> {
+
+        @Override
+        public Integer parse(String text, Locale locale) {
+        /*    if (!text.contains("T")) {
+                text = text.replace(" ", "T");
+            }*/
+            return Integer.parseInt(text);
+        }
+
+        @Override
+        public String print(Integer integer, Locale locale) {
+            return integer.toString();
+        }
+    }
 }

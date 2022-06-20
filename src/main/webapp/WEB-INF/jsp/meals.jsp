@@ -101,7 +101,7 @@
                     <span class="fa fa-close"></span>
                     <spring:message code="common.cancel"/>
                 </button>
-                <button type="button" class="btn btn-primary" onclick="save()">
+                <button type="button" class="btn btn-primary" onclick="saveRow()">
                     <span class="fa fa-check"></span>
                     <spring:message code="common.save"/>
                 </button>
@@ -114,5 +114,8 @@
     <jsp:param name="addTitle" value="meal.add"/>
     <jsp:param name="editTitle" value="meal.edit"/>
 </jsp:include>
+<script type="text/javascript">
+    i18n["emptyCalories"] = '<spring:message code="meal.emptyCalories"/>';
+</script>
 </body>
 </html>
