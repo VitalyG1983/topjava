@@ -92,16 +92,15 @@ function renderDeleteBtn(data, type, row) {
 
 function failNoty(jqXHR) {
     closeNoty();
- /*   let caloriesEmptyFlag;
-    let caloriesEmptyNoty;
-    if (jqXHR.status === 422 && jqXHR.responseJSON.includes("[calories]")
-        && jqXHR.responseJSON.includes("NumberFormatException: For input string: \"\"")) {
-        caloriesEmptyFlag = true;
-        caloriesEmptyNoty = "Поле \'Калории\' не должно быть пустым";
-    }*/
+    let textNoty;
+    if ($.type(jqXHR)==="string" && jqXHR !== "") {
+        textNoty = "<span class='fa fa-lg fa-check'></span> &nbsp;" + i18n[jqXHR];
+    } else {
+        textNoty="<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + i18n["common.errorStatus"] + ": " + jqXHR.status + (jqXHR.responseJSON ? "<br>" + jqXHR.responseJSON : "")
+    }
+
     failedNote = new Noty({
-        //text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + i18n["common.errorStatus"] + ": " + jqXHR.status + (jqXHR.responseJSON ? "<br>" + (caloriesEmptyFlag ? caloriesEmptyNoty : jqXHR.responseJSON) : ""),
-        text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + i18n["common.errorStatus"] + ": " + jqXHR.status + (jqXHR.responseJSON ? "<br>" + jqXHR.responseJSON : ""),
+        text: textNoty,
         type: "error",
         layout: "bottomRight"
     });

@@ -114,7 +114,7 @@ $('#dateTime').datetimepicker({
 
 function saveRow() {
     if ($('#calories').val() === "") {
-        successNoty("emptyCalories");
+        failNoty("emptyCalories", null);
         return;
     }
     save();
