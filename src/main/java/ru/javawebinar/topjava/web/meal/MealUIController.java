@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.ValidationUtil.getResult;
+import static ru.javawebinar.topjava.util.ValidationUtil.getBindResult;
 
 @RestController
 @RequestMapping(value = "/profile/meals", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,8 +41,8 @@ public class MealUIController extends AbstractMealController {
 
     @PostMapping
     public ResponseEntity<String> createOrUpdate(@Valid Meal meal, BindingResult result) {
-        ResponseEntity<String> responseEntity = getResult(result);
-        if (responseEntity != null && responseEntity.hasBody()) {
+        ResponseEntity<String> responseEntity = getBindResult(result);
+        if (responseEntity != null) {
             return responseEntity;
         }
 

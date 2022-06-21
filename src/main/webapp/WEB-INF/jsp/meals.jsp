@@ -11,7 +11,7 @@
 
 <div class="jumbotron pt-4">
     <div class="container">
-        <h3 class="text-center"><spring:message code="meal.title"/></h3>
+        <h3 class="text-center" id="title"></h3>
         <%--https://getbootstrap.com/docs/4.0/components/card/--%>
         <div class="card border-dark">
             <div class="card-body pb-0">
@@ -55,8 +55,8 @@
         <table class="table table-striped" id="datatable">
             <thead>
             <tr>
-                <th><spring:message code="meal.dateTime"/></th>
-                <th><spring:message code="meal.description"/></th>
+                <th id="thDateTime"></th>
+                <th id="thName"></th>
                 <th><spring:message code="meal.calories"/></th>
                 <th></th>
                 <th></th>
@@ -84,10 +84,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="description" class="col-form-label"><spring:message
-                                code="meal.description"/></label>
-                        <input type="text" class="form-control" id="description" name="description"
-                               placeholder="<spring:message code="meal.description"/>">
+                        <label for="ModalElemName" id="labelModalElemName" class="col-form-label"></label>
+                        <input type="text" class="form-control" id="ModalElemName" name="description"
+                               placeholder="">
                     </div>
 
                     <div class="form-group">
@@ -101,7 +100,7 @@
                     <span class="fa fa-close"></span>
                     <spring:message code="common.cancel"/>
                 </button>
-                <button type="button" class="btn btn-primary" onclick="saveRow()">
+                <button type="button" class="btn btn-primary" onclick="save()">
                     <span class="fa fa-check"></span>
                     <spring:message code="common.save"/>
                 </button>
@@ -113,9 +112,8 @@
 <jsp:include page="fragments/i18n.jsp">
     <jsp:param name="addTitle" value="meal.add"/>
     <jsp:param name="editTitle" value="meal.edit"/>
+    <jsp:param name="title" value="meal.title"/>
+    <jsp:param name="thDateTime" value="meal.dateTime"/>
+    <jsp:param name="thName" value="meal.description"/>
 </jsp:include>
-<script type="text/javascript">
-    i18n["emptyCalories"] = '<spring:message code="meal.emptyCalories"/>';
-</script>
 </body>
-</html>

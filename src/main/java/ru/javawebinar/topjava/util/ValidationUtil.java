@@ -76,7 +76,7 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static ResponseEntity<String> getResult(BindingResult result) {
+    public static ResponseEntity<String> getBindResult(BindingResult result) {
         if (result.hasErrors()) {
             String errorFieldsMsg = result.getFieldErrors().stream()
                     .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))

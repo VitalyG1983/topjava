@@ -11,10 +11,10 @@ const ctx = {
         }).done(updateTableByData);
     },
     detailsFormToSerialize: function () {
-        /*  let dateTime = $('#dateTime');
-          let dateTimeToSerialize = dateTime.val().replace(" ", "T");
-          dateTime.val(dateTimeToSerialize);*/
-        return form.serialize() + "&excess=false"
+        let dateTime = $('#dateTime');
+        let dateTimeToSerialize = dateTime.val().replace(" ", "T");
+        dateTime.val(dateTimeToSerialize);
+        return form.serialize();
     },
     parseValue: function (key, value) {
         if (key === 'dateTime') {
@@ -40,7 +40,13 @@ $(function () {
             "info": true,
             "columns": [
                 {
-                    "data": "dateTime"
+                    "data": "dateTime",
+                    "render": function (date, type, row) {
+                        if (type === "display") {
+                            return date.replace("T", " ");
+                        }
+                        return date;
+                    }
                 },
                 {
                     "data": "description"
@@ -111,11 +117,3 @@ $('#endTime').datetimepicker({
 $('#dateTime').datetimepicker({
     format: 'Y-m-d H:i'
 });
-
-function saveRow() {
-    if ($('#calories').val() === "") {
-        failNoty("emptyCalories", null);
-        return;
-    }
-    save();
-}

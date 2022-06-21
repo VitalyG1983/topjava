@@ -402,7 +402,7 @@
                     <con:params/>
                     <con:element>Response</con:element>
                 </con:representation>
-                <con:representation type="RESPONSE"><con:mediaType>text/html;charset=UTF-8</con:mediaType><con:status>200</con:status><con:params/><con:element>html</con:element></con:representation><con:request name="GetAll" id="2a72d2ca-373a-4aeb-ab90-9804e8bcf92d" mediaType="application/json">
+                <con:representation type="RESPONSE"><con:mediaType>text/html;charset=UTF-8</con:mediaType><con:status>200</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="GetAll" id="2a72d2ca-373a-4aeb-ab90-9804e8bcf92d" mediaType="application/json">
                     <con:settings>
                         <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
                     </con:settings>

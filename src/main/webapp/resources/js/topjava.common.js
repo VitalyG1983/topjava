@@ -3,6 +3,9 @@ let form;
 function makeEditable(datatableApi) {
     ctx.datatableApi = datatableApi;
     form = $('#detailsForm');
+    $("#title").html(i18n["title"]);
+    $("#thDateTime").html(i18n["thDateTime"]);
+    $("#thName").html(i18n["thName"]);
 
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -14,6 +17,8 @@ function makeEditable(datatableApi) {
 
 function add() {
     $("#modalTitle").html(i18n["addTitle"]);
+    $("#labelModalElemName").html(i18n["thName"]);
+    $("#ModalElemName").attr("placeholder", i18n["thName"]);
     form.find(":input").val("");
     $("#editRow").modal();
 }
@@ -21,6 +26,7 @@ function add() {
 function updateRow(id) {
     form.find(":input").val("");
     $("#modalTitle").html(i18n["editTitle"]);
+    $("#labelModalElemName").html(i18n["thName"]);
     $.get(ctx.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
             value = ctx.parseValue(key, value);
@@ -50,7 +56,6 @@ function save() {
     $.ajax({
         type: "POST",
         url: ctx.ajaxUrl,
-        //data: form.serialize()
         data: ctx.detailsFormToSerialize()
     }).done(function () {
         $("#editRow").modal("hide");
@@ -92,15 +97,8 @@ function renderDeleteBtn(data, type, row) {
 
 function failNoty(jqXHR) {
     closeNoty();
-    let textNoty;
-    if ($.type(jqXHR)==="string" && jqXHR !== "") {
-        textNoty = "<span class='fa fa-lg fa-check'></span> &nbsp;" + i18n[jqXHR];
-    } else {
-        textNoty="<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + i18n["common.errorStatus"] + ": " + jqXHR.status + (jqXHR.responseJSON ? "<br>" + jqXHR.responseJSON : "")
-    }
-
     failedNote = new Noty({
-        text: textNoty,
+        text: "<span class='fa fa-lg fa-exclamation-circle'></span> &nbsp;" + i18n["common.errorStatus"] + ": " + jqXHR.status + (jqXHR.responseJSON ? "<br>" + jqXHR.responseJSON : ""),
         type: "error",
         layout: "bottomRight"
     });
