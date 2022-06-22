@@ -55,8 +55,8 @@
         <table class="table table-striped" id="datatable">
             <thead>
             <tr>
-                <th id="thDateTime"></th>
-                <th id="thName"></th>
+                <th><spring:message code="meal.dateTime"/></th>
+                <th><spring:message code="meal.description"/></th>
                 <th><spring:message code="meal.calories"/></th>
                 <th></th>
                 <th></th>
@@ -84,9 +84,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="ModalElemName" id="labelModalElemName" class="col-form-label"></label>
-                        <input type="text" class="form-control" id="ModalElemName" name="description"
-                               placeholder="">
+                        <label for="description" class="col-form-label"><spring:message
+                                code="meal.description"/></label>
+                        <input type="text" class="form-control" id="description" name="description"
+                               placeholder="<spring:message code="meal.description"/>">
                     </div>
 
                     <div class="form-group">
@@ -113,7 +114,5 @@
     <jsp:param name="addTitle" value="meal.add"/>
     <jsp:param name="editTitle" value="meal.edit"/>
     <jsp:param name="title" value="meal.title"/>
-    <jsp:param name="thDateTime" value="meal.dateTime"/>
-    <jsp:param name="thName" value="meal.description"/>
 </jsp:include>
 </body>

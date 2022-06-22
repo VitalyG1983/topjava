@@ -4,8 +4,6 @@ function makeEditable(datatableApi) {
     ctx.datatableApi = datatableApi;
     form = $('#detailsForm');
     $("#title").html(i18n["title"]);
-    $("#thDateTime").html(i18n["thDateTime"]);
-    $("#thName").html(i18n["thName"]);
 
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -17,8 +15,6 @@ function makeEditable(datatableApi) {
 
 function add() {
     $("#modalTitle").html(i18n["addTitle"]);
-    $("#labelModalElemName").html(i18n["thName"]);
-    $("#ModalElemName").attr("placeholder", i18n["thName"]);
     form.find(":input").val("");
     $("#editRow").modal();
 }
@@ -26,7 +22,6 @@ function add() {
 function updateRow(id) {
     form.find(":input").val("");
     $("#modalTitle").html(i18n["editTitle"]);
-    $("#labelModalElemName").html(i18n["thName"]);
     $.get(ctx.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
             value = ctx.parseValue(key, value);

@@ -10,7 +10,7 @@ public class MealTo extends BaseTo {
 
     private final String description;
 
-    private int calories;
+    private final int calories;
 
     private final boolean excess;
 

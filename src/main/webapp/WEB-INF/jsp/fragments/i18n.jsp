@@ -12,7 +12,5 @@
     i18n["addTitle"] = '<spring:message code="${param.addTitle}"/>';
     i18n["editTitle"] = '<spring:message code="${param.editTitle}"/>';
     i18n["title"] = '<spring:message code="${param.title}"/>';
-    i18n["thDateTime"] = '<spring:message code="${param.thDateTime}"/>';
-    i18n["thName"] = '<spring:message code="${param.thName}"/>';
 </script>
 </html>

@@ -11,14 +11,11 @@ const ctx = {
         }).done(updateTableByData);
     },
     detailsFormToSerialize: function () {
-        let dateTime = $('#dateTime');
-        let dateTimeToSerialize = dateTime.val().replace(" ", "T");
-        dateTime.val(dateTimeToSerialize);
         return form.serialize();
     },
     parseValue: function (key, value) {
         if (key === 'dateTime') {
-            value = value.replace("T", " ").substr(0, 16);
+            value = dateTimeFormat(value);
         }
         return value;
     }
@@ -27,6 +24,10 @@ const ctx = {
 function clearFilter() {
     $("#filter")[0].reset();
     $.get(mealAjaxUrl, updateTableByData);
+}
+
+function dateTimeFormat(dateTime) {
+    return dateTime.replace("T", " ").substring(0, 16);
 }
 
 $(function () {
@@ -43,7 +44,7 @@ $(function () {
                     "data": "dateTime",
                     "render": function (date, type, row) {
                         if (type === "display") {
-                            return date.replace("T", " ");
+                            return dateTimeFormat(date);
                         }
                         return date;
                     }

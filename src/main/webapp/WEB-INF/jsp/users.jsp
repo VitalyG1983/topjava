@@ -20,11 +20,11 @@
         <table class="table table-striped" id="datatable">
             <thead>
             <tr>
-                <th id="thName"></th>
+                <th><spring:message code="user.name"/></th>
                 <th><spring:message code="user.email"/></th>
                 <th><spring:message code="user.roles"/></th>
                 <th><spring:message code="user.active"/></th>
-                <th id="thDateTime"></th>
+                <th><spring:message code="user.registered"/></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -45,9 +45,9 @@
                     <input type="hidden" id="id" name="id">
 
                     <div class="form-group">
-                        <label for="ModalElemName" class="col-form-label" id="labelModalElemName"></label>
-                        <input type="text" class="form-control" id="ModalElemName" name="name"
-                               placeholder="">
+                        <label for="name" class="col-form-label"><spring:message code="user.name"/></label>
+                        <input type="text" class="form-control" id="name" name="name"
+                               placeholder="<spring:message code="user.name"/>">
                     </div>
 
                     <div class="form-group">
@@ -81,8 +81,6 @@
     <jsp:param name="addTitle" value="user.add"/>
     <jsp:param name="editTitle" value="user.edit"/>
     <jsp:param name="title" value="user.title"/>
-    <jsp:param name="thDateTime" value="user.registered"/>
-    <jsp:param name="thName" value="user.name"/>
 </jsp:include>
 </body>
 </html>
