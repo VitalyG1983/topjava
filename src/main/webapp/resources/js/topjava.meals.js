@@ -10,9 +10,6 @@ const ctx = {
             data: $("#filter").serialize()
         }).done(updateTableByData);
     },
-    detailsFormToSerialize: function () {
-        return form.serialize();
-    },
     parseValue: function (key, value) {
         if (key === 'dateTime') {
             value = dateTimeFormat(value);

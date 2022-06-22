@@ -111,8 +111,6 @@
 </div>
 <jsp:include page="fragments/footer.jsp"/>
 <jsp:include page="fragments/i18n.jsp">
-    <jsp:param name="addTitle" value="meal.add"/>
-    <jsp:param name="editTitle" value="meal.edit"/>
-    <jsp:param name="title" value="meal.title"/>
+    <jsp:param name="type" value="meal"/>
 </jsp:include>
 </body>

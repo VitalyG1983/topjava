@@ -9,8 +9,8 @@
     <c:forEach var="key" items='<%=new String[]{"common.deleted","common.saved","common.enabled","common.disabled","common.errorStatus","common.confirm"}%>'>
     i18n["${key}"] = "<spring:message code="${key}"/>";
     </c:forEach>
-    i18n["addTitle"] = '<spring:message code="${param.addTitle}"/>';
-    i18n["editTitle"] = '<spring:message code="${param.editTitle}"/>';
-    i18n["title"] = '<spring:message code="${param.title}"/>';
+    i18n["addTitle"] = '<spring:message code="${param.type}.add"/>';
+    i18n["editTitle"] = '<spring:message code="${param.type}.edit"/>';
+    i18n["title"] = '<spring:message code="${param.type}.title"/>';
 </script>
 </html>
