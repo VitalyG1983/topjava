@@ -2,11 +2,14 @@ package ru.javawebinar.topjava.web.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
 
 import javax.validation.Valid;
+import java.net.URI;
 
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
@@ -28,12 +31,11 @@ public class ProfileRestController extends AbstractUserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    //public ResponseEntity<User> register(@RequestBody  @Valid UserTo userTo) {
-    public void register(@RequestBody @Valid UserTo userTo) {
+    public ResponseEntity<User> register(@RequestBody @Valid UserTo userTo) {
         User created = super.create(userTo);
-    /*    URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();
-        return ResponseEntity.created(uriOfNewResource).body(created);*/
+        return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
