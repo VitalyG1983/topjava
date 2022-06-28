@@ -13,6 +13,10 @@ public class UserUtil {
         return new User(null, userTo.getName(), userTo.getEmail().toLowerCase(), userTo.getPassword(), userTo.getCaloriesPerDay(), Role.USER);
     }
 
+    public static User createFromTo(UserTo userTo) {
+        return new User(userTo.getId() != null ? userTo.getId() : null, userTo.getName(), userTo.getEmail().toLowerCase(), userTo.getPassword(), userTo.getCaloriesPerDay(), Role.USER);
+    }
+
     public static UserTo asTo(User user) {
         return new UserTo(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getCaloriesPerDay());
     }

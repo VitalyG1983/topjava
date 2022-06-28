@@ -15,6 +15,7 @@
 
     <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled"/>
 
+    <!--Provide support for conversion, formatting and validation -->
     <mvc:annotation-driven conversion-service="conversionService">
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
@@ -73,4 +74,6 @@
     <mvc:interceptors>
         <bean class="ru.javawebinar.topjava.web.interceptor.ModelInterceptor"/>
     </mvc:interceptors>
+
+    <bean id="userValidator" class="ru.javawebinar.topjava.web.UserValidator"/>
 </beans>
