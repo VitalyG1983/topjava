@@ -9,7 +9,7 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
-import ru.javawebinar.topjava.web.UserValidator;
+import ru.javawebinar.topjava.web.validator.UserValidator;
 
 import java.util.List;
 
