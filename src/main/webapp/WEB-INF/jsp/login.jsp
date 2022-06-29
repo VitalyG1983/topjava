@@ -18,7 +18,8 @@
         </c:if>
         <sec:authorize access="isAnonymous()">
             <div class="pt-2">
-                <a class="btn btn-lg btn-info mt-2" href="profile/register"><spring:message code="app.register"/> &raquo;</a>
+                <a class="btn btn-lg btn-info mt-2" href="profile/register"><spring:message code="app.register"/>
+                    &raquo;</a>
                 <button type="submit" class="btn btn-lg btn-primary mt-2" onclick="login('user@yandex.ru', 'password')">
                     <spring:message code="app.login"/> User
                 </button>
@@ -27,6 +28,12 @@
                 </button>
             </div>
         </sec:authorize>
+
+        <spring:message code="app.lang"/>: <select id="language" name="language" onchange="location = this.value;">
+        <option value="login?lang=en">English</option>
+        <option value="login?lang=ru">Русский</option>
+    </select>
+
         <div class="lead py-4"><spring:message code="app.stackTitle"/> <br>
             <a href="http://projects.spring.io/spring-security/">Spring Security</a>,
             <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html">Spring MVC</a>,
@@ -66,10 +73,15 @@
         setCredentials(username, password);
         $("#login_form").submit();
     }
+
     function setCredentials(username, password) {
         $('input[name="username"]').val(username);
         $('input[name="password"]').val(password);
     }
+
+    <c:if test="${not empty param.lang}">
+    $('select[name="language"]').val("login?lang="+"${param.lang}");
+    </c:if>
 </script>
 </body>
 </html>
