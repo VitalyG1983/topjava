@@ -7,15 +7,10 @@
 
 <nav class="navbar navbar-dark bg-dark py-0">
     <div class="container">
-        <a href="meals" class="navbar-brand"><img src="resources/images/icon-meal.png"> <spring:message code="app.title"/></a>
+        <a href="meals" class="navbar-brand"><img src="resources/images/icon-meal.png"> <spring:message
+                code="app.title"/></a>
         <sec:authorize access="isAuthenticated()">
-           <%-- <jsp:useBean id="localeContextHolder" type="org.springframework.context.i18n.LocaleContextHolder"/>--%>
-            <c:set var="holderr" value="${pageContext.request.locale.language}"/>
-            <c:set var="holder" value="<%=LocaleContextHolder.getLocale()%>"/>
-            <%= LocaleContextHolder.getLocale() %>
-            <%= request.getAttribute("holderr") %>
-            <form:form class="form-inline my-2" action="logout?lang=<%=LocaleContextHolder.getLocale()%>" method="post">
-                <input type="hidden" name="localee" value="<%=LocaleContextHolder.getLocale()%>">
+            <form:form class="form-inline my-2" action="logout" method="post">
                 <sec:authorize access="hasRole('ADMIN')">
                     <a class="btn btn-info mr-1" href="users"><spring:message code="user.title"/></a>
                 </sec:authorize>
@@ -34,5 +29,16 @@
                 </button>
             </form:form>
         </sec:authorize>
+
+        <c:set var="uri" value='<%=request.getAttribute("javax.servlet.forward.request_uri")%>'/>
+        <c:set var="currentLang" value='<%=LocaleContextHolder.getLocale()%>'/>
+        <spring:message code="app.lang"/>: <select id="language" name="language" onchange="location = this.value;">
+        <option value="${uri}?lang=en">English</option>
+        <option value="${uri}?lang=ru">Русский</option>
+    </select>
     </div>
+
+    <script type="text/javascript">
+        $('select[name="language"]').val("${uri}?lang=" + "${currentLang}");
+    </script>
 </nav>

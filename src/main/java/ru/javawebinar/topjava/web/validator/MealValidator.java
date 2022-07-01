@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web.validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.javawebinar.topjava.model.Meal;
@@ -11,10 +12,10 @@ import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 
 import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
 
+@Component
 public class MealValidator implements Validator {
 
     @Autowired

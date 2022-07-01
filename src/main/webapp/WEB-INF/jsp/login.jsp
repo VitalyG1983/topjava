@@ -29,11 +29,6 @@
             </div>
         </sec:authorize>
 
-        <spring:message code="app.lang"/>: <select id="language" name="language" onchange="location = this.value;">
-        <option value="login?lang=en">English</option>
-        <option value="login?lang=ru">Русский</option>
-    </select>
-
         <div class="lead py-4"><spring:message code="app.stackTitle"/> <br>
             <a href="http://projects.spring.io/spring-security/">Spring Security</a>,
             <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html">Spring MVC</a>,
@@ -78,10 +73,6 @@
         $('input[name="username"]').val(username);
         $('input[name="password"]').val(password);
     }
-
-    <c:if test="${not empty param.lang}">
-    $('select[name="language"]').val("login?lang="+"${param.lang}");
-    </c:if>
 </script>
 </body>
 </html>
