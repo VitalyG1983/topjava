@@ -70,7 +70,7 @@ public class User extends AbstractNamedEntity {
 
     @Column(name = "calories_per_day", nullable = false, columnDefinition = "int default 2000")
     @Range(min = 10, max = 10000)
-    private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
+    private Integer caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("dateTime DESC")
@@ -85,11 +85,11 @@ public class User extends AbstractNamedEntity {
         this(u.id, u.name, u.email, u.password, u.caloriesPerDay, u.enabled, u.registered, u.roles);
     }
 
-    public User(Integer id, String name, String email, String password, int caloriesPerDay, Role... roles) {
+    public User(Integer id, String name, String email, String password, Integer caloriesPerDay, Role... roles) {
         this(id, name, email, password, caloriesPerDay, true, new Date(), Arrays.asList((roles)));
     }
 
-    public User(Integer id, String name, String email, String password, int caloriesPerDay, boolean enabled, Date registered, Collection<Role> roles) {
+    public User(Integer id, String name, String email, String password, Integer caloriesPerDay, boolean enabled, Date registered, Collection<Role> roles) {
         super(id, name);
         this.email = email;
         this.password = password;

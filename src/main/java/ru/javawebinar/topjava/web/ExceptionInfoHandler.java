@@ -57,12 +57,14 @@ public class ExceptionInfoHandler {
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
+        final String sRootCause = rootCause.toString();
+        final String substrRootCause = sRootCause.substring(sRootCause.indexOf(":") + 2);
         if (logException) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, rootCause.toString());
+        return new ErrorInfo(req.getRequestURL(), errorType, substrRootCause);
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
