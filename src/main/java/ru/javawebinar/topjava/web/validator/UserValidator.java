@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web.validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.javawebinar.topjava.model.User;
@@ -53,7 +54,7 @@ public class UserValidator implements Validator {
         }
         if (userByEmail != null) {
             errors.rejectValue("email", String.valueOf(VALIDATION_ERROR),
-                    messageSource.getMessage("user.doublicateEmail", new Object[]{}, Locale.getDefault()));
+                    messageSource.getMessage("user.doublicateEmail", new Object[]{}, LocaleContextHolder.getLocale()));
         }
     }
 }

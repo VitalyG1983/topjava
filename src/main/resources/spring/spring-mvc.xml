@@ -89,6 +89,7 @@
         <property name="defaultLocale" value="en"/>
     </bean>
 
+   <!-- <bean id="localeContextHolder" class="org.springframework.context.i18n.LocaleContextHolder"/>-->
     <bean id="userValidator" class="ru.javawebinar.topjava.web.validator.UserValidator"/>
     <bean id="mealValidator" class="ru.javawebinar.topjava.web.validator.MealValidator"/>
 </beans>

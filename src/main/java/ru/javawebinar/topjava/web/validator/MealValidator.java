@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web.validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.javawebinar.topjava.model.Meal;
@@ -49,7 +50,7 @@ public class MealValidator implements Validator {
         }
         if (foundedMeal != null) {
             errors.rejectValue("dateTime", String.valueOf(VALIDATION_ERROR),
-                    messageSource.getMessage("meal.doublicateDateTime", new Object[]{}, Locale.getDefault()));
+                    messageSource.getMessage("meal.doublicateDateTime", new Object[]{}, LocaleContextHolder.getLocale()));
         }
     }
 
