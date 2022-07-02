@@ -11,7 +11,7 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
-import ru.javawebinar.topjava.web.validator.MealValidator;
+import ru.javawebinar.topjava.web.validator.MealDateTimeValidator;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,14 +24,14 @@ public abstract class AbstractMealController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    MealValidator mealValidator;
+    private MealDateTimeValidator mealDateTimeValidator;
 
     @Autowired
     private MealService service;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
-        binder.addValidators(mealValidator);
+        binder.addValidators(mealDateTimeValidator);
     }
 
     public Meal get(int id) {

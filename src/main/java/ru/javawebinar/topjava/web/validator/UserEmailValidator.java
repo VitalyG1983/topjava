@@ -7,20 +7,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
 
-import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
-
 @Component
-public class UserValidator implements Validator {
+public class UserEmailValidator implements Validator {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Override
     public boolean supports(Class clazz) {
@@ -36,24 +34,9 @@ public class UserValidator implements Validator {
         } else {
             user = (User) target;
         }
-        if (user.isNew()) {
-            try {
-                userByEmail = userService.getByEmail(user.getEmail());
-            } catch (Exception e) {
-                //e.printStackTrace();
-            }
-            //   update
-        } else try {
-            String newEmail = user.getEmail();
-            String oldEmail = userService.get(user.getId()).getEmail();
-            if (!oldEmail.equals(newEmail)) {
-                userByEmail = userService.getByEmail(newEmail);
-            }
-        } catch (Exception e) {
-            //e.printStackTrace();
-        }
-        if (userByEmail != null) {
-            errors.rejectValue("email", String.valueOf(VALIDATION_ERROR),
+        userByEmail = userRepository.getByEmail(user.getEmail());
+        if (userByEmail != null && (user.isNew() || (!user.isNew() && user.getId() != userByEmail.getId()))) {
+            errors.rejectValue("email", "user.doublicateEmail",
                     messageSource.getMessage("user.doublicateEmail", new Object[]{}, LocaleContextHolder.getLocale()));
         }
     }
