@@ -56,6 +56,12 @@ public class UserTestData {
         return updated;
     }
 
+    public static User getUpdatedWithDoublicateEmail() {
+        User updated = getUpdated();
+        updated.setEmail(user.getEmail());
+        return updated;
+    }
+
     public static User getNewWithDoublicateEmail() {
         return new User(null, "New", "user@yandex.ru", "newPass", 1555, false, new Date(), Collections.singleton(Role.USER));
     }

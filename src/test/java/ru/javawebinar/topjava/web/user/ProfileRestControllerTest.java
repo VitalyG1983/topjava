@@ -13,6 +13,7 @@ import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
+import javax.annotation.PostConstruct;
 import java.util.Locale;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -25,8 +26,19 @@ import static ru.javawebinar.topjava.web.user.ProfileRestController.REST_URL;
 
 class ProfileRestControllerTest extends AbstractControllerTest {
 
+    private static final String URL = "http://localhost/rest/profile";
+
     @Autowired
     private UserService userService;
+
+    private String message;
+    private String emailDetailMessage;
+
+    @PostConstruct
+    private void setup() {
+        message = messageSource.getMessage("user.doublicateEmail", new Object[]{}, Locale.ENGLISH);
+        emailDetailMessage = "[email] " + message;
+    }
 
     @Test
     void get() throws Exception {
@@ -70,22 +82,20 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void registerWithDoublicateEmail() throws Exception {
-        UserTo newTo = new UserTo(null, "newName", "user@yandex.ru", "newPassword", 1500);
-        String url = "http://localhost/rest/profile";
-        String message = messageSource.getMessage("user.doublicateEmail", new Object[]{}, Locale.ENGLISH);
-        String detailMess = "[email] " + message;
+        UserTo newTo = getNewTo();
+        newTo.setEmail(user.getEmail());
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(url))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(URL))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(detailMess));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(emailDetailMessage));
     }
 
     @Test
-    void validationForRegister() throws Exception {
+    void registerWithNotValidData() throws Exception {
         UserTo newTo = getNewTo();
         newTo.setName("");
         User newUser = UserUtil.createNewFromTo(newTo);
@@ -123,6 +133,51 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         USER_MATCHER.assertMatch(userService.get(USER_ID), UserUtil.updateFromTo(new User(user), updatedTo));
+    }
+
+    @Test
+    void updateWithNotValidData() throws Exception {
+        User updated = getUpdated();
+        UserTo updatedTo = UserUtil.asTo(updated);
+        updatedTo.setName("");
+        perform(MockMvcRequestBuilders.put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andExpect(status().isUnprocessableEntity());
+
+        updated = getUpdated();
+        updatedTo = UserUtil.asTo(updated);
+        updatedTo.setEmail("");
+        perform(MockMvcRequestBuilders.put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andExpect(status().isUnprocessableEntity());
+
+        updated = getUpdated();
+        updatedTo = UserUtil.asTo(updated);
+        updatedTo.setCaloriesPerDay(0);
+        perform(MockMvcRequestBuilders.put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void updateWithDoublicateEmail() throws Exception {
+        User updated = getUpdated();
+        UserTo updatedTo = UserUtil.asTo(updated);
+        updatedTo.setEmail(user.getEmail());
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(URL))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(emailDetailMessage));
     }
 
     @Test

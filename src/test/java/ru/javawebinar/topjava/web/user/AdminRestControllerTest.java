@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 
+import javax.annotation.PostConstruct;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,9 +26,19 @@ import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
 class AdminRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = AdminRestController.REST_URL + '/';
+    private static final String URL = "http://localhost/rest/admin/users/";
 
     @Autowired
     private UserService userService;
+
+    private String message;
+    private String emailDetailMessage;
+
+    @PostConstruct
+    private void setup() {
+        message = messageSource.getMessage("user.doublicateEmail", new Object[]{}, Locale.ENGLISH);
+        emailDetailMessage = "[email] " + message;
+    }
 
     @Test
     void get() throws Exception {
@@ -100,6 +111,45 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void updateWithNotValidData() throws Exception {
+        User updated = getUpdated();
+        updated.setName("");
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(jsonWithPassword(updated, updated.getPassword())))
+                .andExpect(status().isUnprocessableEntity());
+
+        updated = getUpdated();
+        updated.setEmail("");
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(jsonWithPassword(updated, updated.getPassword())))
+                .andExpect(status().isUnprocessableEntity());
+
+        updated = getUpdated();
+        updated.setCaloriesPerDay(0);
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(jsonWithPassword(updated, updated.getPassword())))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void updateWithDoublicateEmail() throws Exception {
+        User updated = getUpdatedWithDoublicateEmail();
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(jsonWithPassword(updated, updated.getPassword())))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(URL + USER_ID))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(emailDetailMessage));
+    }
+
+    @Test
     void createWithLocation() throws Exception {
         User newUser = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -118,21 +168,18 @@ class AdminRestControllerTest extends AbstractControllerTest {
     @Test
     void createWithDoublicateEmail() throws Exception {
         User newUser = getNewWithDoublicateEmail();
-        String url = "http://localhost/rest/admin/users/";
-        String message = messageSource.getMessage("user.doublicateEmail", new Object[]{}, Locale.ENGLISH);
-        String detailMess = "[email] " + message;
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
                 .content(jsonWithPassword(newUser, newUser.getPassword())))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(url))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(URL))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(detailMess));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(emailDetailMessage));
     }
 
     @Test
-    void validationForCreateWithLocation() throws Exception {
+    void createWithLocationNotValid() throws Exception {
         User newUser = getNew();
         newUser.setName("");
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)

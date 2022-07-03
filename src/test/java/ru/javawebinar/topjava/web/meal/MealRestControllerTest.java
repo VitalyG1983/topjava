@@ -15,6 +15,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
+import javax.annotation.PostConstruct;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,9 +34,19 @@ import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
 class MealRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = MealRestController.REST_URL + '/';
+    private static final String URL = "http://localhost/rest/profile/meals/";
 
     @Autowired
     private MealService mealService;
+
+    private String message;
+    private String dateTimeDetailMessage;
+
+    @PostConstruct
+    private void setup() {
+        message = messageSource.getMessage("meal.doublicateDateTime", new Object[]{}, Locale.ENGLISH);
+        dateTimeDetailMessage = "[dateTime] " + message;
+    }
 
     @Test
     void get() throws Exception {
@@ -88,6 +99,42 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void updateWithNotValidData() throws Exception {
+        Meal updated = getUpdated();
+        updated.setCalories(0);
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isUnprocessableEntity());
+
+        updated = getUpdated();
+        updated.setDescription("");
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isUnprocessableEntity());
+
+        updated = getUpdated();
+        updated.setDateTime(null);
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void updateWithDoublicateDateTime() throws Exception {
+        Meal updated = getUpdatedWithDoublicateDateTime();
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(URL + MEAL1_ID))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(dateTimeDetailMessage));
+    }
+
+    @Test
     void createWithLocation() throws Exception {
         Meal newMeal = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -114,25 +161,23 @@ class MealRestControllerTest extends AbstractControllerTest {
 
         String content = result.getResponse().getContentAsString().replace("[", "").replace("]", "");
         ErrorInfo errorInfo = JsonUtil.readValue(content, ErrorInfo.class);
-        String url = "http://localhost/rest/profile/meals/";
-        String message = messageSource.getMessage("meal.doublicateDateTime", new Object[]{}, Locale.ENGLISH);
+        //String message = messageSource.getMessage("meal.doublicateDateTime", new Object[]{}, Locale.ENGLISH);
         String detailMess = "dateTime " + message;
-        ErrorInfo errorInfoDoublicateDateTime = new ErrorInfo(url, VALIDATION_ERROR, detailMess);
+        ErrorInfo errorInfoDoublicateDateTime = new ErrorInfo(URL, VALIDATION_ERROR, detailMess);
         assertEquals(errorInfoDoublicateDateTime, errorInfo);
         ////////////////////////    OR -> second check variant     /////////////////////
-        String detailMessage = "[dateTime] " + message;
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
                 .content(JsonUtil.writeValue(newMeal)))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(url))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(URL))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(detailMessage));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(dateTimeDetailMessage));
     }
 
     @Test
-    void validationCreateWithLocation() throws Exception {
+    void createWithLocationNotValidData() throws Exception {
         Meal newMeal = getNew();
         newMeal.setCalories(0);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
