@@ -6,7 +6,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +20,8 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 
@@ -57,20 +58,24 @@ public class ExceptionInfoHandler {
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
-        final String sRootCause = rootCause.toString();
-        final String substrRootCause = sRootCause.substring(sRootCause.indexOf(":") + 2);
+        String sRootCause = rootCause.toString();
+        sRootCause = sRootCause.substring(sRootCause.indexOf(":") + 2);
         if (logException) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, substrRootCause);
+        return new ErrorInfo(req.getRequestURL(), errorType, sRootCause);
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(BindException.class)
-    public ErrorInfo handleMethodArgumentNotValidException(BindException e, HttpServletRequest req) {
-        ResponseEntity<String> errorResponse = ValidationUtil.getErrorResponse(e.getBindingResult());
-        return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, errorResponse.getBody());
+    public ArrayList<ErrorInfo> handleMethodArgumentNotValidException(BindException e, HttpServletRequest req) {
+        List<String> errorResponseList = ValidationUtil.getErrorResponseList(e.getBindingResult());
+        ArrayList<ErrorInfo> errorInfoArray = new ArrayList<>();
+        for (String s : errorResponseList) {
+            errorInfoArray.add(logAndGetErrorInfo(req, new Exception(s), true, VALIDATION_ERROR));
+        }
+        return errorInfoArray;
     }
 }
