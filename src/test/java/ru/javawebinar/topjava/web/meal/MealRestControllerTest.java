@@ -7,12 +7,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.exception.ErrorInfo;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
+
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,6 +28,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 import static ru.javawebinar.topjava.UserTestData.user;
 import static ru.javawebinar.topjava.util.MealsUtil.createTo;
 import static ru.javawebinar.topjava.util.MealsUtil.getTos;
+import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
 
 class MealRestControllerTest extends AbstractControllerTest {
 
@@ -108,9 +112,23 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn();
 
-        String content = result.getResponse().getContentAsString();
+        String content = result.getResponse().getContentAsString().replace("[", "").replace("]", "");
         ErrorInfo errorInfo = JsonUtil.readValue(content, ErrorInfo.class);
+        String url = "http://localhost/rest/profile/meals/";
+        String message = messageSource.getMessage("meal.doublicateDateTime", new Object[]{}, Locale.ENGLISH);
+        String detailMess = "dateTime " + message;
+        ErrorInfo errorInfoDoublicateDateTime = new ErrorInfo(url, VALIDATION_ERROR, detailMess);
         assertEquals(errorInfoDoublicateDateTime, errorInfo);
+        ////////////////////////    OR -> second check variant     /////////////////////
+        String detailMessage = "[dateTime] " + message;
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(newMeal)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(url))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(detailMessage));
     }
 
     @Test
