@@ -10,6 +10,8 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.util.Objects;
+
 @Component
 public class MealDateTimeValidator implements Validator {
 
@@ -27,9 +29,8 @@ public class MealDateTimeValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Meal meal = (Meal) target;
-        Meal foundedMeal = null;
-        foundedMeal = repository.getByDateTime(meal.getDateTime(), SecurityUtil.authUserId());
-        if (foundedMeal != null && (meal.isNew() || (!meal.isNew() && meal.getId() != foundedMeal.getId()))) {
+        Meal foundedMeal = repository.getByDateTime(meal.getDateTime(), SecurityUtil.authUserId());
+        if (foundedMeal != null && (meal.isNew() || !Objects.equals(meal.getId(), foundedMeal.getId()))) {
             errors.rejectValue("dateTime", "meal.doublicateDateTime",
                     messageSource.getMessage("meal.doublicateDateTime", new Object[]{}, LocaleContextHolder.getLocale()));
         }

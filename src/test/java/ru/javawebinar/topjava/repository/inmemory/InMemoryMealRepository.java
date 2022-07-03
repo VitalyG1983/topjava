@@ -32,19 +32,19 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        Objects.requireNonNull(meal, "meal must not be null");
+        Objects.requireNonNull(meal, "meal must not be null" );
         var meals = usersMealsMap.computeIfAbsent(userId, uId -> new InMemoryBaseRepository<>());
         return meals.save(meal);
     }
 
     @PostConstruct
     public void postConstruct() {
-        log.info("+++ PostConstruct");
+        log.info("+++ PostConstruct" );
     }
 
     @PreDestroy
     public void preDestroy() {
-        log.info("+++ PreDestroy");
+        log.info("+++ PreDestroy" );
     }
 
     @Override
@@ -62,6 +62,12 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return filterByPredicate(userId, meal -> Util.isBetweenHalfOpen(meal.getDateTime(), startDateTime, endDateTime));
+    }
+
+    @Override
+    public Meal getByDateTime(LocalDateTime ldt, int userId) {
+        var meals = usersMealsMap.get(userId).getCollection();
+        return meals.stream().filter(meal -> meal.getDateTime().equals(ldt)).findFirst().orElse(null);
     }
 
     @Override

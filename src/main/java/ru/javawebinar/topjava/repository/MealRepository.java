@@ -25,7 +25,6 @@ public interface MealRepository {
         throw new UnsupportedOperationException();
     }
 
-    default Meal getByDateTime(LocalDateTime ldt, int userId) {
-        throw new UnsupportedOperationException();
-    }
+    // found Meal by dateTime when @Valid field 'datetime' in controller
+    Meal getByDateTime(LocalDateTime ldt, int userId);
 }

@@ -30,8 +30,8 @@ public class JdbcMealRepository implements MealRepository {
 
     public JdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.insertMeal = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("meals")
-                .usingGeneratedKeyColumns("id");
+                .withTableName("meals" )
+                .usingGeneratedKeyColumns("id" );
 
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -87,5 +87,12 @@ public class JdbcMealRepository implements MealRepository {
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=?  AND date_time >=  ? AND date_time < ? ORDER BY date_time DESC",
                 ROW_MAPPER, userId, startDateTime, endDateTime);
+    }
+
+    @Override
+    public Meal getByDateTime(LocalDateTime ldt, int userId) {
+        List<Meal> meals = jdbcTemplate.query(
+                "SELECT * FROM meals WHERE date_time = ? AND user_id = ?", ROW_MAPPER, ldt, userId);
+        return DataAccessUtils.singleResult(meals);
     }
 }

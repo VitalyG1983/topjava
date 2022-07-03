@@ -11,6 +11,8 @@ import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
 
+import java.util.Objects;
+
 @Component
 public class UserEmailValidator implements Validator {
 
@@ -28,14 +30,13 @@ public class UserEmailValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         User user;
-        User userByEmail = null;
         if (target.getClass().equals(UserTo.class)) {
             user = UserUtil.createFromTo((UserTo) target);
         } else {
             user = (User) target;
         }
-        userByEmail = userRepository.getByEmail(user.getEmail());
-        if (userByEmail != null && (user.isNew() || (!user.isNew() && user.getId() != userByEmail.getId()))) {
+        User userByEmail = userRepository.getByEmail(user.getEmail());
+        if (userByEmail != null && (user.isNew() || !Objects.equals(user.getId(), userByEmail.getId()))) {
             errors.rejectValue("email", "user.doublicateEmail",
                     messageSource.getMessage("user.doublicateEmail", new Object[]{}, LocaleContextHolder.getLocale()));
         }
