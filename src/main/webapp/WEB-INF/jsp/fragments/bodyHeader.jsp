@@ -31,7 +31,7 @@
         </sec:authorize>
 
         <c:set var="uri" value='<%=request.getAttribute("javax.servlet.forward.request_uri")%>'/>
-        <c:set var="currentLang" value='<%=LocaleContextHolder.getLocale()%>'/>
+        <c:set var="currentLang" value='${pageContext.response.locale}'/>
         <input type="hidden" id="currLang" value="${currentLang}">
         <spring:message code="app.lang"/>: <select id="language" name="language" onchange="location = this.value;">
         <option value="${uri}?lang=en">English</option>

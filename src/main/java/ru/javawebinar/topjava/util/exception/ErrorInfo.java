@@ -20,6 +20,7 @@ public class ErrorInfo {
         this.details = details;
     }
 
+    // Deserializer from JSON - works only in test MealRestControllerTest -> createWithDoublicateDateTime()
     @JsonSetter("details" )
     public void setDetails(String detail) {
         ArrayList<String> details = new ArrayList<>();
