@@ -43,6 +43,6 @@ public class MealTestData {
     }
 
     public static Meal getUpdatedWithDoublicateDateTime() {
-        return new Meal(MEAL1_ID, meal1.getDateTime(), "Обновленный завтрак", 200);
+        return new Meal(MEAL1_ID, meal2.getDateTime(), "Обновленный завтрак", 200);
     }
 }

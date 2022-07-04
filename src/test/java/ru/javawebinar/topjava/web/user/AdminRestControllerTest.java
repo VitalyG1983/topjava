@@ -144,9 +144,9 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(admin))
                 .content(jsonWithPassword(updated, updated.getPassword())))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(URL + USER_ID))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(emailDetailMessage));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.url").value(URL + USER_ID))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(VALIDATION_ERROR.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").value(emailDetailMessage));
     }
 
     @Test
@@ -173,9 +173,9 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(admin))
                 .content(jsonWithPassword(newUser, newUser.getPassword())))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(URL))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(emailDetailMessage));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.url").value(URL))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(VALIDATION_ERROR.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").value(emailDetailMessage));
     }
 
     @Test

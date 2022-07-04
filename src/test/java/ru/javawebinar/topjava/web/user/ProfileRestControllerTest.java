@@ -89,9 +89,9 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(URL))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(emailDetailMessage));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.url").value(URL))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(VALIDATION_ERROR.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").value(emailDetailMessage));
     }
 
     @Test
@@ -169,15 +169,15 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     void updateWithDoublicateEmail() throws Exception {
         User updated = getUpdated();
         UserTo updatedTo = UserUtil.asTo(updated);
-        updatedTo.setEmail(user.getEmail());
+        updatedTo.setEmail(admin.getEmail());
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].url").value(URL))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].type").value(VALIDATION_ERROR.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].detail").value(emailDetailMessage));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.url").value(URL))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(VALIDATION_ERROR.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").value(emailDetailMessage));
     }
 
     @Test

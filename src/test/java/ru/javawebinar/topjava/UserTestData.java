@@ -58,7 +58,7 @@ public class UserTestData {
 
     public static User getUpdatedWithDoublicateEmail() {
         User updated = getUpdated();
-        updated.setEmail(user.getEmail());
+        updated.setEmail(admin.getEmail());
         return updated;
     }
 

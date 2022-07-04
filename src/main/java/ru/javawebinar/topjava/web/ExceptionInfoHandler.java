@@ -21,7 +21,6 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.List;
 
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 
@@ -55,27 +54,26 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, true, APP_ERROR);
     }
 
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(BindException.class)
+    public ErrorInfo handleMethodArgumentNotValidException(BindException e, HttpServletRequest req) {
+        return logAndGetErrorInfo(req, e, true, VALIDATION_ERROR);
+    }
+
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
-        String sRootCause = rootCause.toString();
-        sRootCause = sRootCause.substring(sRootCause.indexOf(":") + 2);
+        ArrayList<String> details = new ArrayList<>();
+        if (e instanceof BindException bindException) {
+            details.addAll(0, ValidationUtil.getErrorResponseList(bindException.getBindingResult()));
+        } else {
+            details.add(rootCause.getMessage());
+        }
         if (logException) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, sRootCause);
-    }
-
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(BindException.class)
-    public ArrayList<ErrorInfo> handleMethodArgumentNotValidException(BindException e, HttpServletRequest req) {
-        List<String> errorResponseList = ValidationUtil.getErrorResponseList(e.getBindingResult());
-        ArrayList<ErrorInfo> errorInfoArray = new ArrayList<>();
-        for (String s : errorResponseList) {
-            errorInfoArray.add(logAndGetErrorInfo(req, new Exception(s), true, VALIDATION_ERROR));
-        }
-        return errorInfoArray;
+        return new ErrorInfo(req.getRequestURL(), errorType, details);
     }
 }
