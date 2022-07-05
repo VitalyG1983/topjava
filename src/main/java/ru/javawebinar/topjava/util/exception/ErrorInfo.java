@@ -21,10 +21,14 @@ public class ErrorInfo {
     }
 
     // Deserializer from JSON - works only in test MealRestControllerTest -> createWithDoublicateDateTime()
-    @JsonSetter("details" )
-    public void setDetails(String detail) {
+    @JsonSetter("details")
+    public void setDetailsFromJson(String detail) {
         ArrayList<String> details = new ArrayList<>();
         details.add(detail);
+        this.details = details;
+    }
+
+    public void setDetails(ArrayList<String> details) {
         this.details = details;
     }
 

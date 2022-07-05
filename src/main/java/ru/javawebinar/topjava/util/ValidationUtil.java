@@ -57,7 +57,7 @@ public class ValidationUtil {
 
     public static void checkNew(HasId bean) {
         if (!bean.isNew()) {
-            throw new IllegalRequestDataException(bean + " must be new (id=null)" );
+            throw new IllegalRequestDataException(bean + " must be new (id=null)");
         }
     }
 
@@ -77,7 +77,7 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static List<String> getErrorResponseList(BindingResult result) {
+    public static List<String> getBindingErrorList(BindingResult result) {
         return result.getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                 .collect(Collectors.toList());

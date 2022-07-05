@@ -56,6 +56,7 @@ public class DataJpaMealRepository implements MealRepository {
         return crudMealRepository.getWithUser(id, userId);
     }
 
+    @Override
     public Meal getByDateTime(LocalDateTime ldt, int userId) {
         return crudMealRepository.findOne(ldt, userId);
     }
