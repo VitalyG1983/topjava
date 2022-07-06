@@ -2,19 +2,18 @@ package ru.javawebinar.topjava.util.exception;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class ErrorInfo {
     private String url;
     private ErrorType type;
-    private List<String> details;
+    private String[] details;
 
     public ErrorInfo() {
     }
 
-    public ErrorInfo(CharSequence url, ErrorType type, List<String> details) {
+    public ErrorInfo(CharSequence url, ErrorType type, String[] details) {
         this.url = url.toString();
         this.type = type;
         this.details = details;
@@ -23,9 +22,7 @@ public class ErrorInfo {
     // Deserializer from JSON - works only in test MealRestControllerTest -> createWithDoublicateDateTime()
     @JsonSetter("details")
     public void setDetailsFromJson(String detail) {
-        ArrayList<String> details = new ArrayList<>();
-        details.add(detail);
-        this.details = details;
+        this.details = new String[]{detail};
     }
 
     @Override
@@ -33,11 +30,13 @@ public class ErrorInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ErrorInfo errorInfo = (ErrorInfo) o;
-        return Objects.equals(url, errorInfo.url) && type == errorInfo.type && Objects.equals(details, errorInfo.details);
+        return url.equals(errorInfo.url) && type == errorInfo.type && Arrays.equals(details, errorInfo.details);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(url, type, details);
+        int result = Objects.hash(url, type);
+        result = 31 * result + Arrays.hashCode(details);
+        return result;
     }
 }

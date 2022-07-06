@@ -8,9 +8,7 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.*;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ValidationUtil {
 
@@ -76,10 +74,8 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static List<String> getBindingErrorList(BindingResult result) {
+    public static String[] getBindingErrorList(BindingResult result) {
         return result.getFieldErrors().stream()
-                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
-                //.collect(Collectors.toList());
-                .collect(Collectors.toList());
+                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage())).toArray(String[]::new);
     }
 }

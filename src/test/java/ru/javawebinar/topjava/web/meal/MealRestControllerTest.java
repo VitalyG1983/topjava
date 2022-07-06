@@ -15,7 +15,6 @@ import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -108,7 +107,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnprocessableEntity());
 
         updated = getUpdated();
-        updated.setDescription("" );
+        updated.setDescription("");
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
                 .content(JsonUtil.writeValue(updated)))
@@ -129,9 +128,9 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(user))
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.url" ).value(URL + MEAL1_ID))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.type" ).value(VALIDATION_ERROR.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.details" ).value(dateTimeDetailMessage));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.url").value(URL + MEAL1_ID))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(VALIDATION_ERROR.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").value(dateTimeDetailMessage));
     }
 
     @Test
@@ -159,11 +158,9 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn();
 
-        String content = result.getResponse().getContentAsString().replace("[", "" ).replace("]", "" );
+        String content = result.getResponse().getContentAsString().replace("[", "").replace("]", "");
         ErrorInfo errorInfo = JsonUtil.readValue(content, ErrorInfo.class);
-        ArrayList<String> detailMess = new ArrayList<>();
-        detailMess.add("dateTime " + message);
-        ErrorInfo errorInfoDoublicateDateTime = new ErrorInfo(URL, VALIDATION_ERROR, detailMess);
+        ErrorInfo errorInfoDoublicateDateTime = new ErrorInfo(URL, VALIDATION_ERROR, new String[]{"dateTime " + message});
         assertEquals(errorInfoDoublicateDateTime, errorInfo);
         ////////////////////////    OR -> second check variant     /////////////////////
         perform(MockMvcRequestBuilders.post(REST_URL)
@@ -171,9 +168,9 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(user))
                 .content(JsonUtil.writeValue(newMeal)))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.url" ).value(URL))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.type" ).value(VALIDATION_ERROR.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.details" ).value(dateTimeDetailMessage));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.url").value(URL))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value(VALIDATION_ERROR.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").value(dateTimeDetailMessage));
     }
 
     @Test
@@ -186,7 +183,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(newMeal)))
                 .andExpect(status().isUnprocessableEntity());
         newMeal = getNew();
-        newMeal.setDescription("" );
+        newMeal.setDescription("");
         action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
@@ -213,9 +210,9 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getBetween() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "filter" )
-                .param("startDate", "2020-01-30" ).param("startTime", "07:00" )
-                .param("endDate", "2020-01-31" ).param("endTime", "11:00" )
+        perform(MockMvcRequestBuilders.get(REST_URL + "filter")
+                .param("startDate", "2020-01-30").param("startTime", "07:00")
+                .param("endDate", "2020-01-31").param("endTime", "11:00")
                 .with(userHttpBasic(user)))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -224,7 +221,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getBetweenAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDate=&endTime=" )
+        perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDate=&endTime=")
                 .with(userHttpBasic(user)))
                 .andExpect(status().isOk())
                 .andExpect(TO_MATCHER.contentJson(getTos(meals, user.getCaloriesPerDay())));
