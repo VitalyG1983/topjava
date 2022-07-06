@@ -21,6 +21,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 
@@ -57,25 +59,25 @@ public class ExceptionInfoHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(BindException.class)
     public ErrorInfo handleMethodArgumentNotValidException(BindException e, HttpServletRequest req) {
-        ArrayList<String> details = new ArrayList<>();
-        details.addAll(0, ValidationUtil.getBindingErrorList(e.getBindingResult()));
-        ErrorInfo errorInfo = logAndGetErrorInfo(req, e, true, VALIDATION_ERROR);
-        errorInfo.setDetails(details);
-        return errorInfo;
+        return logAndGetErrorInfo(req, e, true, VALIDATION_ERROR,
+                ValidationUtil.getBindingErrorList(e.getBindingResult()).toArray(String[]::new));
     }
 
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
-    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException,
+                                                ErrorType errorType, String... exceptions) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
-        ArrayList<String> details = new ArrayList<>();
-        if (!(e instanceof BindException)) {
-            details.add(rootCause.getMessage());
+        List<String> errorDetails = new ArrayList<>();
+        if (exceptions == null) {
+            errorDetails.add(rootCause.getMessage());
+        } else {
+            errorDetails = Arrays.stream(exceptions).toList();
         }
         if (logException) {
             log.error(errorType + " at request " + req.getRequestURL(), rootCause);
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, details);
+        return new ErrorInfo(req.getRequestURL(), errorType, errorDetails);
     }
 }

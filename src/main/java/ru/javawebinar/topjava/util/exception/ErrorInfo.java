@@ -28,10 +28,6 @@ public class ErrorInfo {
         this.details = details;
     }
 
-    public void setDetails(ArrayList<String> details) {
-        this.details = details;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

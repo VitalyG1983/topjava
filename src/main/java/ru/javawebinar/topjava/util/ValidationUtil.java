@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.util;
 
-
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
@@ -80,6 +79,7 @@ public class ValidationUtil {
     public static List<String> getBindingErrorList(BindingResult result) {
         return result.getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
+                //.collect(Collectors.toList());
                 .collect(Collectors.toList());
     }
 }
