@@ -31,12 +31,11 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Autowired
     private UserService userService;
 
-    private String message;
     private String emailDetailMessage;
 
     @PostConstruct
     private void setup() {
-        message = messageSource.getMessage("user.doublicateEmail", new Object[]{}, Locale.ENGLISH);
+        String message = messageSource.getMessage("user.doublicateEmail", new Object[]{}, Locale.ENGLISH);
         emailDetailMessage = "[email] " + message;
     }
 
@@ -98,24 +97,21 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     void registerWithNotValidData() throws Exception {
         UserTo newTo = getNewTo();
         newTo.setName("");
-        User newUser = UserUtil.createNewFromTo(newTo);
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
         newTo = getNewTo();
         newTo.setCaloriesPerDay(0);
-        newUser = UserUtil.createNewFromTo(newTo);
-        action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
         newTo = getNewTo();
         newTo.setEmail("");
-        newUser = UserUtil.createNewFromTo(newTo);
-        action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())

@@ -31,12 +31,11 @@ class AdminRestControllerTest extends AbstractControllerTest {
     @Autowired
     private UserService userService;
 
-    private String message;
     private String emailDetailMessage;
 
     @PostConstruct
     private void setup() {
-        message = messageSource.getMessage("user.doublicateEmail", new Object[]{}, Locale.ENGLISH);
+        String message = messageSource.getMessage("user.doublicateEmail", new Object[]{}, Locale.ENGLISH);
         emailDetailMessage = "[email] " + message;
     }
 
@@ -182,21 +181,21 @@ class AdminRestControllerTest extends AbstractControllerTest {
     void createWithLocationNotValid() throws Exception {
         User newUser = getNew();
         newUser.setName("");
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
                 .content(jsonWithPassword(newUser, newUser.getPassword())))
                 .andExpect(status().isUnprocessableEntity());
         newUser = getNew();
         newUser.setCaloriesPerDay(0);
-        action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
                 .content(jsonWithPassword(newUser, newUser.getPassword())))
                 .andExpect(status().isUnprocessableEntity());
         newUser = getNew();
         newUser.setEmail("");
-        action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
                 .content(jsonWithPassword(newUser, newUser.getPassword())))
