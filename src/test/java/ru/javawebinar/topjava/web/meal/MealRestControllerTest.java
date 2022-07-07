@@ -38,12 +38,11 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Autowired
     private MealService mealService;
 
-    private String message;
     private String dateTimeDetailMessage;
 
     @PostConstruct
     private void setup() {
-        message = messageSource.getMessage("meal.doublicateDateTime", new Object[]{}, Locale.ENGLISH);
+        String message = messageSource.getMessage("meal.doublicateDateTime", new Object[]{}, Locale.ENGLISH);
         dateTimeDetailMessage = "[dateTime] " + message;
     }
 
@@ -158,9 +157,8 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andReturn();
 
-        String content = result.getResponse().getContentAsString().replace("[", "").replace("]", "");
-        ErrorInfo errorInfo = JsonUtil.readValue(content, ErrorInfo.class);
-        ErrorInfo errorInfoDoublicateDateTime = new ErrorInfo(URL, VALIDATION_ERROR, new String[]{"dateTime " + message});
+        ErrorInfo errorInfo = JsonUtil.readValue(result.getResponse().getContentAsString(), ErrorInfo.class);
+        ErrorInfo errorInfoDoublicateDateTime = new ErrorInfo(URL, VALIDATION_ERROR, new String[]{dateTimeDetailMessage});
         assertEquals(errorInfoDoublicateDateTime, errorInfo);
         ////////////////////////    OR -> second check variant     /////////////////////
         perform(MockMvcRequestBuilders.post(REST_URL)
